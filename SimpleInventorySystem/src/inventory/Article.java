@@ -2,13 +2,12 @@ package inventory;
 
 public class Article {
 
-	public Article(Object object) {
-		if(null == object)
+	public Article(String artnr) {
+		if(null == artnr)
 			throw new IllegalArgumentException();
 	}
 
 	public Article() {
-		// TODO Auto-generated constructor stub
 	}
 
 }
