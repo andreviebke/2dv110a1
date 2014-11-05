@@ -12,6 +12,7 @@ public class Article {
 	}
 
 	public Article() {
+		this.artnr = "";
 	}
 
 	public String getArtNr() {
