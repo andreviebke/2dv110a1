@@ -3,7 +3,8 @@ package inventory;
 public class Article {
 
 	public Article(Object object) {
-		// TODO Auto-generated constructor stub
+		if(null == object)
+			throw new IllegalArgumentException();
 	}
 
 	public Article() {
