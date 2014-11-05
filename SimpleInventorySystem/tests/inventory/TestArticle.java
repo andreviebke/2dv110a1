@@ -1,12 +1,14 @@
 package inventory;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class TestArticle {
+
+	private static String ART_NR = "12345";
 
 	@Before
 	public void setUp() throws Exception {
@@ -20,18 +22,16 @@ public class TestArticle {
 	public void shouldCreateNewInstance() {
 		new Article();
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnNull()
-	{
+	public void shouldThrowOnNull() {
 		new Article(null);
 	}
-	
+
 	@Test
-	public void shouldSetArticleNumberOnCreateNewInstance()
-	{
-		Article art = new Article("12345");
-		assertEquals(art.getArtNr(), "12345");
+	public void shouldSetArticleNumberOnCreateNewInstance() {
+		Article art = new Article(TestArticle.ART_NR);
+		assertEquals(art.getArtNr(), TestArticle.ART_NR);
 	}
 
 }
