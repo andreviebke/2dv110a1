@@ -6,6 +6,8 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class TestStorageLocation {
@@ -33,14 +35,15 @@ public class TestStorageLocation {
 	@Test
 	public void shouldCreateInstanceWithASetOfArticles()
 	{
-		List<Article> input = (LinkedList<Article>)mock(List.class);
+		@SuppressWarnings("unchecked")
+		List<Article> input = mock(List.class);
 		
 		Article a1 = mock(Article.class);
 		Article a2 = mock(Article.class);		
 		input.add(a1);
 		input.add(a2);
 		
-		StorageLocation s = new StorageLocation("somename", input);
+		StorageLocation s = new StorageLocation("MyStorageLocation", input);
 		assertEquals(input, s.getArticles());
 	}
 
