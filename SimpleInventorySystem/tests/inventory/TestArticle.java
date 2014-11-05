@@ -36,4 +36,10 @@ public class TestArticle {
 		Article art = new Article();
 		assertEquals(art.getArtNr(), "");
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnNegativeWidht()
+	{
+		new Article(TestArticle.ART_NR, -1);
+	}
 }
