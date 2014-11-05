@@ -24,9 +24,10 @@ public class TestArticle {
 	}
 
 	@Test
-	public void shouldSetArticleNumberOnCreateNewInstance() {
-		Article art = new Article(TestArticle.ART_NR);
+	public void shouldSetArtNrAndWidth() {
+		Article art = new Article(TestArticle.ART_NR, 123);
 		assertEquals(art.getArtNr(), TestArticle.ART_NR);
+		assertEquals(art.getWidth(), 123);
 	}
 
 	@Test
