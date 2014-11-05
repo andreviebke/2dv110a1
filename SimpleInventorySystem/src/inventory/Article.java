@@ -14,6 +14,9 @@ public class Article {
 		if(null == artnr)
 			throw new IllegalArgumentException();
 		
+		if(artnr.length() > 20)
+			throw new IllegalArgumentException();
+		
 		if(width < 0)
 			throw new IllegalArgumentException();
 		
