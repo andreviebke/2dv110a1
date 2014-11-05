@@ -14,6 +14,8 @@ import org.mockito.MockitoAnnotations;
 public class TestStorageLocation {
 
 	private static String STORAGE_NAME = "MyStorageLocation";
+	private static int MAX_ARTICLES = 10;
+	private static int MIN_ARTICLES = 1;
 
 	@Before
 	public void setUp() throws Exception {
@@ -37,30 +39,31 @@ public class TestStorageLocation {
 	}
 
 	@Test
-	public void shouldCreateInstanceWithASetOfArticles() {
-		@SuppressWarnings("unchecked")
-		List<Article> input = mock(List.class);
-
-		Article a1 = mock(Article.class);
-		Article a2 = mock(Article.class);
-		input.add(a1);
-		input.add(a2);
+	public void shouldCreateInstanceWithArticles() {
+		LinkedList<Article> articles = this
+				.createArticles(TestStorageLocation.MIN_ARTICLES);
 
 		StorageLocation s = new StorageLocation(
-				TestStorageLocation.STORAGE_NAME, input);
-		assertEquals(input, s.getArticles());
+				TestStorageLocation.STORAGE_NAME, articles);
+		assertEquals(articles, s.getArticles());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowOnTooManyArticles() {
+		LinkedList<Article> articles = this
+				.createArticles(TestStorageLocation.MAX_ARTICLES + 1);
+
+		new StorageLocation(TestStorageLocation.STORAGE_NAME, articles);
+	}
+
+	public LinkedList<Article> createArticles(int count) {
 		LinkedList<Article> articles = new LinkedList<Article>();
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < count; i++) {
 			articles.add(mock(Article.class));
 		}
 
-		new StorageLocation(
-				TestStorageLocation.STORAGE_NAME, articles);
+		return articles;
 	}
 
 }
