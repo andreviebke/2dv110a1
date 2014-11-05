@@ -9,6 +9,7 @@ import org.junit.Test;
 public class TestArticle {
 
 	private static String ART_NR = "12345";
+	private static double WIDTH = 123.0;
 
 	@Before
 	public void setUp() throws Exception {
@@ -20,19 +21,18 @@ public class TestArticle {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowOnNull() {
-		new Article(null);
+		new Article(null, 0);
 	}
 
 	@Test
 	public void shouldSetArtNrAndWidth() {
-		Article art = new Article(TestArticle.ART_NR, 123.0);
+		Article art = new Article(TestArticle.ART_NR, TestArticle.WIDTH);
 		assertEquals(art.getArtNr(), TestArticle.ART_NR);
-		assertEquals(art.getWidth(), 123.0, 0.001);
+		assertEquals(art.getWidth(), TestArticle.WIDTH, 0.001);
 	}
 
 	@Test
-	public void shouldSetEmptyStringOnNoArticleNumber()
-	{
+	public void shouldSetEmptyString() {
 		Article art = new Article();
 		assertEquals(art.getArtNr(), "");
 	}
