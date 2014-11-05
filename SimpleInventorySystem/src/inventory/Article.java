@@ -21,6 +21,9 @@ public class Article {
 		if(width < 0)
 			throw new IllegalArgumentException();
 		
+		if(width > 999)
+			throw new IllegalArgumentException();
+		
 		this.artnr = artnr;
 		this.width = width;
 	}
