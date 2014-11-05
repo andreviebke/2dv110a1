@@ -1,7 +1,7 @@
 package inventory;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -54,6 +54,17 @@ public class TestStorageLocation {
 				.createArticles(TestStorageLocation.MAX_ARTICLES + 1);
 
 		new StorageLocation(TestStorageLocation.STORAGE_NAME, articles);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnTooLargeWidth() {
+		Article a = mock(Article.class);
+		when(a.getWidth()).thenReturn(1000.0);
+		
+		LinkedList<Article> articles= this.createArticles(1);		
+		new StorageLocation(TestStorageLocation.STORAGE_NAME, articles);
+		
+		verify(a.getWidth(), times(1));		
 	}
 
 	public LinkedList<Article> createArticles(int count) {

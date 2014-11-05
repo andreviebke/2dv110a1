@@ -17,7 +17,7 @@ public class StorageLocation {
 	public StorageLocation(String name, List<Article> input) {
 
 		if (input.size() > 9)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException();		
 
 		this.articles = input;
 	}
