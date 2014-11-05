@@ -10,6 +10,7 @@ public class TestArticle {
 
 	private static String ART_NR = "12345";
 	private static double WIDTH = 123.0;
+	private static double NEGATIVE_WIDTH = -1;
 
 	@Before
 	public void setUp() throws Exception {
@@ -23,6 +24,12 @@ public class TestArticle {
 	public void shouldThrowOnNull() {
 		new Article(null, 0);
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnNegativeWidth()
+	{
+		new Article(TestArticle.ART_NR, TestArticle.NEGATIVE_WIDTH);
+	}
 
 	@Test
 	public void shouldSetArtNrAndWidth() {
@@ -35,11 +42,5 @@ public class TestArticle {
 	public void shouldSetEmptyString() {
 		Article art = new Article();
 		assertEquals(art.getArtNr(), "");
-	}
-	
-	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnNegativeWidth()
-	{
-		new Article(TestArticle.ART_NR, -1);
 	}
 }
