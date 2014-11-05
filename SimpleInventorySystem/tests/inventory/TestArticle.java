@@ -20,5 +20,11 @@ public class TestArticle {
 	public void shouldCreateNewInstance() {
 		new Article();
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnNull()
+	{
+		new Article(null);
+	}
 
 }
