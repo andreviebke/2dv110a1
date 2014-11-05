@@ -47,5 +47,21 @@ public class TestStorageLocation {
 				TestStorageLocation.STORAGE_NAME, input);
 		assertEquals(input, s.getArticles());
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnTooManyArticles()
+	{
+		@SuppressWarnings("unchecked")
+		List<Article> input = mock(List.class);
+
+		for(int i=0; i<10; i++)
+		{
+			input.add(mock(Article.class));
+		}
+
+		StorageLocation s = new StorageLocation(
+				TestStorageLocation.STORAGE_NAME, input);
+		assertEquals(input, s.getArticles());
+	}
 
 }
