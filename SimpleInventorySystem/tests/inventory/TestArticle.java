@@ -25,9 +25,9 @@ public class TestArticle {
 
 	@Test
 	public void shouldSetArtNrAndWidth() {
-		Article art = new Article(TestArticle.ART_NR, 123);
+		Article art = new Article(TestArticle.ART_NR, 123.0);
 		assertEquals(art.getArtNr(), TestArticle.ART_NR);
-		assertEquals(art.getWidth(), 123);
+		assertEquals(art.getWidth(), 123.0, 0.001);
 	}
 
 	@Test
