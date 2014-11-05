@@ -3,11 +3,13 @@ package inventory;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.MockitoAnnotations;
 
 public class TestStorageLocation {
 
@@ -15,6 +17,7 @@ public class TestStorageLocation {
 
 	@Before
 	public void setUp() throws Exception {
+		MockitoAnnotations.initMocks(this);
 	}
 
 	@After
@@ -47,21 +50,17 @@ public class TestStorageLocation {
 				TestStorageLocation.STORAGE_NAME, input);
 		assertEquals(input, s.getArticles());
 	}
-	
-	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnTooManyArticles()
-	{
-		@SuppressWarnings("unchecked")
-		List<Article> input = mock(List.class);
 
-		for(int i=0; i<10; i++)
-		{
-			input.add(mock(Article.class));
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnTooManyArticles() {
+		LinkedList<Article> articles = new LinkedList<Article>();
+
+		for (int i = 0; i < 10; i++) {
+			articles.add(mock(Article.class));
 		}
 
-		StorageLocation s = new StorageLocation(
-				TestStorageLocation.STORAGE_NAME, input);
-		assertEquals(input, s.getArticles());
+		new StorageLocation(
+				TestStorageLocation.STORAGE_NAME, articles);
 	}
 
 }

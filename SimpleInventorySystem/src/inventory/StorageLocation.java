@@ -3,18 +3,22 @@ package inventory;
 import java.util.List;
 
 public class StorageLocation {
-	
+
 	private String name;
 	private List<Article> articles;
 
 	public StorageLocation(String name) {
-		if(null == name)
+		if (null == name)
 			throw new IllegalArgumentException();
-		
+
 		this.name = name;
 	}
 
 	public StorageLocation(String name, List<Article> input) {
+
+		if (input.size() > 9)
+			throw new IllegalArgumentException();
+
 		this.articles = input;
 	}
 
