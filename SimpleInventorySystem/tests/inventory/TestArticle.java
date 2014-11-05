@@ -8,9 +8,13 @@ import org.junit.Test;
 
 public class TestArticle {
 
-	private static String ART_NR = "12345";
-	private static double WIDTH = 123.0;
-	private static double NEGATIVE_WIDTH = -1;
+	/* Test data */
+	private static String VALID_ART_NR = "12345";
+	private static String TOO_LONG_ART_NR = "123456789012345678901";
+	private static String NO_ART_NR = "";
+	
+	private static double VALID_WIDTH = 123.0;
+	private static double TOO_SMALL_WIDTH = -1;
 
 	@Before
 	public void setUp() throws Exception {
@@ -21,32 +25,33 @@ public class TestArticle {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnNull() {
+	public void shouldThrowOnNullArticleNumber() {
 		new Article(null, 0);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnNegativeWidth()
-	{
-		new Article(TestArticle.ART_NR, TestArticle.NEGATIVE_WIDTH);
+	public void shouldThrowOnInvalidWidth() {
+		new Article(TestArticle.VALID_ART_NR, TestArticle.TOO_SMALL_WIDTH);
 	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnTooLongArticleNumber() {
+		new Article(TestArticle.TOO_LONG_ART_NR,
+				TestArticle.VALID_WIDTH);
+	}
+	
 
 	@Test
 	public void shouldSetArtNrAndWidth() {
-		Article art = new Article(TestArticle.ART_NR, TestArticle.WIDTH);
-		assertEquals(art.getArtNr(), TestArticle.ART_NR);
-		assertEquals(art.getWidth(), TestArticle.WIDTH, 0.001);
+		Article art = new Article(TestArticle.VALID_ART_NR,
+				TestArticle.VALID_WIDTH);
+		assertEquals(art.getArtNr(), TestArticle.VALID_ART_NR);
+		assertEquals(art.getWidth(), TestArticle.VALID_WIDTH, 0.001);
 	}
 
 	@Test
 	public void shouldSetEmptyString() {
 		Article art = new Article();
-		assertEquals(art.getArtNr(), "");
-	}
-	
-	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnTooLargeArticleNumber()
-	{
-		Article art = new Article("123456789012345678901", TestArticle.WIDTH);
+		assertEquals(art.getArtNr(), TestArticle.NO_ART_NR);
 	}
 }
