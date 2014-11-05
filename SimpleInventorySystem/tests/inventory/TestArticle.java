@@ -43,4 +43,10 @@ public class TestArticle {
 		Article art = new Article();
 		assertEquals(art.getArtNr(), "");
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnTooLargeArticleNumber()
+	{
+		Article art = new Article("123456789012345678901", TestArticle.WIDTH);
+	}
 }
