@@ -38,7 +38,7 @@ public class TestArticle {
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnNegativeWidht()
+	public void shouldThrowOnNegativeWidth()
 	{
 		new Article(TestArticle.ART_NR, -1);
 	}
