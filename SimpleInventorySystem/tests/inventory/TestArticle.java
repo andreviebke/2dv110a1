@@ -15,6 +15,7 @@ public class TestArticle {
 	
 	private static double VALID_WIDTH = 123.0;
 	private static double TOO_SMALL_WIDTH = -1;
+	private static double TOO_LARGE_WIDTH = 1000;
 
 	@Before
 	public void setUp() throws Exception {
@@ -39,7 +40,6 @@ public class TestArticle {
 		new Article(TestArticle.TOO_LONG_ART_NR,
 				TestArticle.VALID_WIDTH);
 	}
-	
 
 	@Test
 	public void shouldSetArtNrAndWidth() {
@@ -53,5 +53,11 @@ public class TestArticle {
 	public void shouldSetEmptyString() {
 		Article art = new Article();
 		assertEquals(art.getArtNr(), TestArticle.NO_ART_NR);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnTooLargeWidth()
+	{
+		new Article(TestArticle.VALID_ART_NR, TestArticle.TOO_LARGE_WIDTH);
 	}
 }
