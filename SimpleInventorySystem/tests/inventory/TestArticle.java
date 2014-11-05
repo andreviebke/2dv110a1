@@ -24,5 +24,12 @@ public class TestArticle {
 	{
 		new Article(null);
 	}
+	
+	@Test
+	public shouldSetArticleNumberOnCreateNewInstance()
+	{
+		Article art = new Article("12345");
+		assertEquals(art.getArtNr(), "12345");
+	}
 
 }
