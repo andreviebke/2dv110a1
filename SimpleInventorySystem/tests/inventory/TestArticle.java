@@ -1,5 +1,7 @@
 package inventory;
 
+import static org.junit.Assert.*;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +28,7 @@ public class TestArticle {
 	}
 	
 	@Test
-	public shouldSetArticleNumberOnCreateNewInstance()
+	public void shouldSetArticleNumberOnCreateNewInstance()
 	{
 		Article art = new Article("12345");
 		assertEquals(art.getArtNr(), "12345");
