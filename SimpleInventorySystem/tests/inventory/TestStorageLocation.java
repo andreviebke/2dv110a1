@@ -61,12 +61,14 @@ public class TestStorageLocation {
 		Article a = mock(Article.class);
 		when(a.getWidth()).thenReturn(1000.0);
 		
-		LinkedList<Article> articles= this.createArticles(1);		
+		LinkedList<Article> articles = new LinkedList<Article>();
+		articles.add(a);
+		
 		new StorageLocation(TestStorageLocation.STORAGE_NAME, articles);
 		
 		verify(a.getWidth(), times(1));		
 	}
-
+	
 	public LinkedList<Article> createArticles(int count) {
 		LinkedList<Article> articles = new LinkedList<Article>();
 
