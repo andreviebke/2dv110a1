@@ -34,4 +34,10 @@ public class TestArticle {
 		assertEquals(art.getArtNr(), TestArticle.ART_NR);
 	}
 
+	@Test
+	public void shouldSetEmptyStringOnNoArticleNumber()
+	{
+		Article art = new Article();
+		assertEquals(art.getArtNr(), "");
+	}
 }
