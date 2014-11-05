@@ -1,30 +1,19 @@
 package inventory;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.LinkedList;
-import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
 
 public class TestStorageLocation {
 
-	private static String STORAGE_NAME = "MyStorageLocation";
-	private static int MAX_ARTICLES = 10;
-	private static int MIN_ARTICLES = 1;
-
-	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
+	private static String VALIDSTORAGE_NAME = "MyStorageLocation";
+	private static int VALID_NUM_ARTICLES = 1;
 
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowOnNull() {
@@ -34,49 +23,54 @@ public class TestStorageLocation {
 	@Test
 	public void shouldCreateInstanceWithName() {
 		StorageLocation s = new StorageLocation(
-				TestStorageLocation.STORAGE_NAME);
-		assertEquals(s.getName(), TestStorageLocation.STORAGE_NAME);
+				TestStorageLocation.VALIDSTORAGE_NAME);
+		assertEquals(s.getName(), TestStorageLocation.VALIDSTORAGE_NAME);
 	}
 
 	@Test
 	public void shouldCreateInstanceWithArticles() {
-		LinkedList<Article> articles = this
-				.createArticles(TestStorageLocation.MIN_ARTICLES);
+		LinkedList<Article> articles = this.createArticles(
+				TestStorageLocation.VALID_NUM_ARTICLES, 0.0);
 
 		StorageLocation s = new StorageLocation(
-				TestStorageLocation.STORAGE_NAME, articles);
+				TestStorageLocation.VALIDSTORAGE_NAME, articles);
+
+		verifyInvokeGetWidth(articles);
+
 		assertEquals(articles, s.getArticles());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowOnTooManyArticles() {
-		LinkedList<Article> articles = this
-				.createArticles(TestStorageLocation.MAX_ARTICLES + 1);
+		LinkedList<Article> articles = this.createArticles(
+				StorageLocation.MAX_ARTICLES + 1, 0.0);
 
-		new StorageLocation(TestStorageLocation.STORAGE_NAME, articles);
+		new StorageLocation(TestStorageLocation.VALIDSTORAGE_NAME, articles);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowOnTooLargeWidth() {
-		Article a = mock(Article.class);
-		when(a.getWidth()).thenReturn(1000.0);
-		
-		LinkedList<Article> articles = new LinkedList<Article>();
-		articles.add(a);
-		
-		new StorageLocation(TestStorageLocation.STORAGE_NAME, articles);
-		
-		verify(a.getWidth(), times(1));		
+		LinkedList<Article> articles = this.createArticles(1, 1000.0);
+
+		new StorageLocation(TestStorageLocation.VALIDSTORAGE_NAME, articles);
+
+		this.verifyInvokeGetWidth(articles);
 	}
-	
-	public LinkedList<Article> createArticles(int count) {
+
+	public LinkedList<Article> createArticles(int count, double width) {
 		LinkedList<Article> articles = new LinkedList<Article>();
 
 		for (int i = 0; i < count; i++) {
-			articles.add(mock(Article.class));
+			Article a = mock(Article.class);
+			when(a.getWidth()).thenReturn(width);
+			articles.add(a);
 		}
 
 		return articles;
 	}
 
+	private void verifyInvokeGetWidth(LinkedList<Article> articles) {
+		for (Article a : articles)
+			verify(a).getWidth();
+	}
 }

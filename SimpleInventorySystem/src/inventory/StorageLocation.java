@@ -4,6 +4,9 @@ import java.util.List;
 
 public class StorageLocation {
 
+	public static double MAX_WIDTH = 1000;
+	public static int MAX_ARTICLES = 10;
+	
 	private String name;
 	private List<Article> articles;
 
@@ -16,7 +19,7 @@ public class StorageLocation {
 
 	public StorageLocation(String name, List<Article> input) {
 
-		if (input.size() > 9)
+		if (input.size() > StorageLocation.MAX_ARTICLES)
 			throw new IllegalArgumentException();		
 
 		double totWidth = 0;
@@ -24,7 +27,7 @@ public class StorageLocation {
 		for(Article a : input)
 			totWidth += a.getWidth();
 		
-		if(totWidth > 999)
+		if(totWidth >= StorageLocation.MAX_WIDTH)
 			throw new IllegalArgumentException();
 			
 		this.articles = input;
