@@ -18,11 +18,6 @@ public class TestArticle {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
-	public void shouldCreateNewInstance() {
-		new Article();
-	}
-
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowOnNull() {
 		new Article(null);
