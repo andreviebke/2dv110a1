@@ -3,6 +3,9 @@ package inventory;
 public class Article {
 
 	public static int MAX_ARTNR_LENGTH = 20;
+	public static double MIN_WIDTH = 0;
+	public static double MAX_WIDTH = 999;
+	
 	private String artnr;
 	private double width;
 	
@@ -18,10 +21,10 @@ public class Article {
 		if(artnr.length() > Article.MAX_ARTNR_LENGTH)
 			throw new IllegalArgumentException();
 		
-		if(width < 0)
+		if(width < Article.MIN_WIDTH)
 			throw new IllegalArgumentException();
 		
-		if(width > 999)
+		if(width > Article.MAX_WIDTH)
 			throw new IllegalArgumentException();
 		
 		this.artnr = artnr;

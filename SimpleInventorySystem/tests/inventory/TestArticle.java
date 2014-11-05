@@ -17,28 +17,26 @@ public class TestArticle {
 	private static double TOO_SMALL_WIDTH = -1;
 	private static double TOO_LARGE_WIDTH = 1000;
 
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowOnNullArticleNumber() {
-		new Article(null, 0);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnInvalidWidth() {
-		new Article(TestArticle.VALID_ART_NR, TestArticle.TOO_SMALL_WIDTH);
+		new Article(null, TestArticle.VALID_WIDTH);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowOnTooLongArticleNumber() {
 		new Article(TestArticle.TOO_LONG_ART_NR,
 				TestArticle.VALID_WIDTH);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnTooSmallWidth() {
+		new Article(TestArticle.VALID_ART_NR, TestArticle.TOO_SMALL_WIDTH);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnTooLargeWidth()
+	{
+		new Article(TestArticle.VALID_ART_NR, TestArticle.TOO_LARGE_WIDTH);
 	}
 
 	@Test
@@ -55,9 +53,5 @@ public class TestArticle {
 		assertEquals(art.getArtNr(), TestArticle.NO_ART_NR);
 	}
 	
-	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnTooLargeWidth()
-	{
-		new Article(TestArticle.VALID_ART_NR, TestArticle.TOO_LARGE_WIDTH);
-	}
+	//TODO: Test boundary values
 }
