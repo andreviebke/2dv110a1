@@ -111,6 +111,17 @@ public class StorageLocation {
 	public void insertMany(LinkedList<Article> articles) {
 		if(null == articles)
 			throw new IllegalArgumentException();
+
+		double totWidth = 0;
+
+		for (Article a : articles)
+			totWidth += a.getWidth();
+
+		if (totWidth > StorageLocation.MAX_WIDTH)
+			throw new IllegalArgumentException();
+		
+		if(totWidth < StorageLocation.MIN_WIDTH)
+			throw new IllegalArgumentException();
 		
 		this.articles.addAll(articles);		
 	}
