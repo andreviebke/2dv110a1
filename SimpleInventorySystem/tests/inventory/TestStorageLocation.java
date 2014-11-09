@@ -122,6 +122,18 @@ public class TestStorageLocation {
 	{
 		this.sut.insertMany(null);
 	}	
+	
+	@Test
+	public void shouldInsertTwice()
+	{
+		LinkedList<Article> articles = this.generateArticles(5, 10);
+		this.sut.insertMany(articles);
+		
+		articles = this.generateArticles(5, 10);
+		this.sut.insertMany(articles);
+		
+		assertEquals(10, this.sut.getArticles().size());
+	}
 
 	private LinkedList<Article> generateArticles(int count, double width) {
 
