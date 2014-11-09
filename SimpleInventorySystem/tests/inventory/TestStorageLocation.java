@@ -110,9 +110,9 @@ public class TestStorageLocation {
 	public void shouldInsertSeveralArticles()
 	{
 		LinkedList<Article> articles = this.generateArticles(5, 10);
-		this.sut.insertmany(articles);
+		this.sut.insertMany(articles);
 		
-		assertEquals(5, this.sut.getArticles().size());	
+		assertEquals(5, this.sut.getArticles().size());
 	}
 	
 	@Test(expected = IllegalArgumentException.class)

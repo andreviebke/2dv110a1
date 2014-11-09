@@ -77,6 +77,16 @@ public class StorageLocation {
 	}
 
 	public void insert(Article mock) {
+		if(null == mock)
+			throw new IllegalArgumentException();
+		
 		this.articles.add(mock);
+	}
+
+	public void insertMany(LinkedList<Article> articles2) {
+		if(null == articles2)
+			throw new IllegalArgumentException();
+		
+		this.articles = articles2;		
 	}
 }
