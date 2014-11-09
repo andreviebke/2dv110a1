@@ -124,7 +124,9 @@ public class TestStorageLocation {
 
 		LinkedList<Article> pickedArticles = this.sut.pickAll();
 		assertEquals(5, pickedArticles.size());
+		assertEquals(0, this.sut.getArticles().size());
 	}
+	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowWhenPickNullArticleNumber() {
 		this.sut.pickAll(null);
@@ -146,6 +148,7 @@ public class TestStorageLocation {
 		this.verifyInvokeGetArtNr(articles);
 		
 		assertEquals(3, pickedArticles.size());
+		assertEquals(2, this.sut.getArticles().size());
 	}
 
 	private LinkedList<Article> insert5Articles() {
