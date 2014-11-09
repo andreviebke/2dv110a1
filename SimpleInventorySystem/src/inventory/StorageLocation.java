@@ -16,6 +16,7 @@ public class StorageLocation {
 			throw new IllegalArgumentException();
 
 		this.name = name;
+		this.articles = new LinkedList<Article>();
 	}
 
 	public StorageLocation(String name, List<Article> input) {
@@ -40,5 +41,23 @@ public class StorageLocation {
 
 	public List<Article> getArticles() {
 		return this.articles;
+	}
+
+	public LinkedList<Article> getAllArticles(String string) {
+		LinkedList<Article> tmpList = new LinkedList<Article>();
+		
+		for(Article a : this.articles)
+		{
+			if(a.getArtNr().equalsIgnoreCase(string))
+			{
+				tmpList.add(a);
+			}
+		}
+		
+		return tmpList;
+	}
+
+	public LinkedList<Article> getAllArticles() {
+		return (LinkedList<Article>) this.articles;
 	}
 }
