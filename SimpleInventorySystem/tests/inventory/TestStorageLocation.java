@@ -143,9 +143,36 @@ public class TestStorageLocation {
 		this.sut.insert(mock);
 	}
 
-	// TODO test when adding too many articles at once
-	// TODO test when adding too many articles already existing
-	// TODO test when adding too large articles when existing
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowWhenInsertTooManyArticlesAfterOneAnother() {
+		this.createSUTWithValidName();
+
+		for (int i = 0; i < StorageLocation.MAX_ARTICLES + 1; i++) {
+			Article mock = this.createMockArticle(
+					TestStorageLocation.VALID_WIDTH,
+					TestStorageLocation.ARTICLE_NAME);
+
+			this.sut.insert(mock);
+		}
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowWhenAddingTooLargeWidthToExistingArticles() {
+		this.createSUTWithValidName();
+
+		Article mock1 = this.createMockArticle(TestStorageLocation.TOO_LARGE_WIDTH / 2,
+				TestStorageLocation.ARTICLE_NAME);
+
+		Article mock2 = this.createMockArticle(
+				TestStorageLocation.TOO_LARGE_WIDTH / 2 + 0.1,
+				TestStorageLocation.ARTICLE_NAME);
+
+		this.sut.insert(mock1);
+		verify(mock1).getWidth();
+		this.sut.insert(mock2);
+		verify(mock2).getWidth();
+	}
 
 	@Test
 	public void shouldInsertManyArticles() {
@@ -266,11 +293,16 @@ public class TestStorageLocation {
 	 * Helper methods
 	 */
 	private void generateArticlesWithName(LinkedList<Article> articles) {
-		when(articles.get(0).getArtNr()).thenReturn(TestStorageLocation.ARTICLE_NAME);
-		when(articles.get(1).getArtNr()).thenReturn(TestStorageLocation.ARTICLE_NAME);
-		when(articles.get(2).getArtNr()).thenReturn(TestStorageLocation.ARTICLE_NAME);
-		when(articles.get(3).getArtNr()).thenReturn(TestStorageLocation.ARTICLE_NAME_2);
-		when(articles.get(4).getArtNr()).thenReturn(TestStorageLocation.ARTICLE_NAME_2);
+		when(articles.get(0).getArtNr()).thenReturn(
+				TestStorageLocation.ARTICLE_NAME);
+		when(articles.get(1).getArtNr()).thenReturn(
+				TestStorageLocation.ARTICLE_NAME);
+		when(articles.get(2).getArtNr()).thenReturn(
+				TestStorageLocation.ARTICLE_NAME);
+		when(articles.get(3).getArtNr()).thenReturn(
+				TestStorageLocation.ARTICLE_NAME_2);
+		when(articles.get(4).getArtNr()).thenReturn(
+				TestStorageLocation.ARTICLE_NAME_2);
 	}
 
 	private LinkedList<Article> insert5Articles() {
