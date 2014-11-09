@@ -76,17 +76,17 @@ public class StorageLocation {
 		return tmpList;
 	}
 
-	public void insert(Article mock) {
-		if(null == mock)
+	public void insert(Article article) {
+		if(null == article)
 			throw new IllegalArgumentException();
 		
-		this.articles.add(mock);
+		this.articles.add(article);
 	}
 
-	public void insertMany(LinkedList<Article> articles2) {
-		if(null == articles2)
+	public void insertMany(LinkedList<Article> articles) {
+		if(null == articles)
 			throw new IllegalArgumentException();
 		
-		this.articles = articles2;		
+		this.articles = articles;		
 	}
 }

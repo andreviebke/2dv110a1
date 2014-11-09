@@ -84,11 +84,13 @@ public class TestStorageLocation {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowOnNullArticleNumber() {
+		
 		this.sut.getArticles(null);
 	}
 
 	@Test
 	public void shoudInsertOneArticle() {
+		
 		Article mock = mock(Article.class);
 		when(mock.getArtNr()).thenReturn(TestStorageLocation.ARTICLE_NAME);
 		this.sut.insert(mock);
@@ -102,13 +104,13 @@ public class TestStorageLocation {
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowWhenInsertNullArticle()
-	{
+	{		
 		this.sut.insert(null);
 	}
 	
 	@Test
 	public void shouldInsertSeveralArticles()
-	{
+	{		
 		LinkedList<Article> articles = this.generateArticles(5, 10);
 		this.sut.insertMany(articles);
 		
@@ -116,10 +118,10 @@ public class TestStorageLocation {
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowWhenUInsertNullArticleList()
+	public void shouldThrowWhenInsertNullArticleList()
 	{
 		this.sut.insertMany(null);
-	}
+	}	
 
 	private LinkedList<Article> generateArticles(int count, double width) {
 
