@@ -84,13 +84,13 @@ public class TestStorageLocation {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowOnNullArticleNumber() {
-		
+
 		this.sut.getArticles(null);
 	}
 
 	@Test
 	public void shoudInsertOneArticle() {
-		
+
 		Article mock = mock(Article.class);
 		when(mock.getArtNr()).thenReturn(TestStorageLocation.ARTICLE_NAME);
 		this.sut.insert(mock);
@@ -101,40 +101,73 @@ public class TestStorageLocation {
 				this.sut.getArticles(TestStorageLocation.ARTICLE_NAME).get(0)
 						.getArtNr());
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowWhenInsertNullArticle()
-	{		
+	public void shouldThrowWhenInsertNullArticle() {
 		this.sut.insert(null);
 	}
-	
+
 	@Test
-	public void shouldInsertSeveralArticles()
-	{		
+	public void shouldInsertSeveralArticles() {
 		LinkedList<Article> articles = this.generateArticles(5, 10);
 		this.sut.insertMany(articles);
-		
+
 		assertEquals(5, this.sut.getArticles().size());
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowWhenInsertNullArticleList()
-	{
+	public void shouldThrowWhenInsertNullArticleList() {
 		this.sut.insertMany(null);
-	}	
-	
+	}
+
 	@Test
-	public void shouldInsertTwice()
-	{
+	public void shouldInsertTwice() {
 		LinkedList<Article> articles = this.generateArticles(5, 10);
 		this.sut.insertMany(articles);
-		
+
 		articles = this.generateArticles(5, 10);
 		this.sut.insertMany(articles);
-		
+
 		assertEquals(10, this.sut.getArticles().size());
 	}
 
+	@Test
+	public void shouldPickAll() {
+		LinkedList<Article> articles = this.generateArticles(5, 10);
+		this.sut.insertMany(articles);
+
+		LinkedList<Article> pickedArticles = this.sut.pickAll();
+		assertEquals(5, pickedArticles);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowWhenPickNullArticleNumber() {
+		
+		LinkedList<Article> articles = this.generateArticles(5, 10);
+		this.sut.insertMany(articles);
+		
+		for(int i=0; i<3; i++)
+			when(articles.get(i).getArtNr()).thenReturn("articleNumber");
+		
+		
+		this.verifyInvokeGetArtNr(articles);
+
+		LinkedList<Article> pickedArticles = this.sut.pickAll("articleNumber");
+		assertEquals(3, pickedArticles);
+	}
+
+	@Test
+	public void shouldPickAllArticlesWithArticleNumber() {
+
+	}
+	
+	private void verifyInvokeGetArtNr(LinkedList<Article> articles) {
+		for(Article a : articles)
+		{
+			verify(a.getArtNr());
+		}
+	}
+	
 	private LinkedList<Article> generateArticles(int count, double width) {
 
 		LinkedList<Article> articles = new LinkedList<Article>();
