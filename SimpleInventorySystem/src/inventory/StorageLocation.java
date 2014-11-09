@@ -107,6 +107,7 @@ public class StorageLocation {
 
 		LinkedList<Article> allArticles = new LinkedList<Article>(articles);
 		allArticles.addAll(this.articles);
+		
 		this.checkWidth(allArticles);
 		this.checkNumArticles(allArticles);
 

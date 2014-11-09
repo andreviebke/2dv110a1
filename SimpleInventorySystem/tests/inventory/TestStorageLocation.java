@@ -229,7 +229,7 @@ public class TestStorageLocation {
 				TestStorageLocation.VALID_WIDTH);
 
 		this.sut.insertMany(articles);
-		
+
 		this.verifyInvokeGetWidth(articles);
 	}
 
@@ -239,7 +239,7 @@ public class TestStorageLocation {
 
 		LinkedList<Article> articles = this.insert5Articles();
 		articles.addAll(this.generateArticles(StorageLocation.MAX_ARTICLES
-				- (5 - 1), TestStorageLocation.VALID_WIDTH));
+				- (articles.size() - 1), TestStorageLocation.VALID_WIDTH));
 		this.sut.insertMany(articles);
 
 		this.verifyInvokeGetWidth(articles);
@@ -248,16 +248,17 @@ public class TestStorageLocation {
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowOnInsertManyArticlesWhenTooLargeWidthWithExisting() {
 		this.createSUTWithValidName();
-		
-		 this.insert5Articles();
-		 
-		LinkedList<Article> articles = new LinkedList<Article>();		
+
+		this.insert5Articles();
+
+		LinkedList<Article> articles = new LinkedList<Article>();
 		articles.add(this.createMockArticle(StorageLocation.MAX_WIDTH,
 				TestStorageLocation.ARTICLE_NAME));
 		this.sut.insertMany(articles);
-		
+
 		this.verifyInvokeGetWidth(articles);
 	}
+
 	/*
 	 * Pick
 	 */
