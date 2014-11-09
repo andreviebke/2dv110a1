@@ -17,6 +17,7 @@ public class TestStorageLocation {
 	private static String NON_EXISTING_ART_NR = "123456";
 	private static int VALID_NUM_ARTICLES = 1;
 	private static double TOO_LARGE_WIDTH = 1000.0;
+	private static double TOO_SMALL_WIDTH = -0.1;
 	private static String ARTICLE_NAME = "articleName";
 	private StorageLocation sut;
 
@@ -116,6 +117,22 @@ public class TestStorageLocation {
 		insert5Articles();
 
 		assertEquals(10, this.sut.getArticles().size());
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnInsertOneArticleWithTooLargeTotalWidth()
+	{
+		Article mock = mock(Article.class);
+		when(mock.getWidth()).thenReturn(TestStorageLocation.TOO_LARGE_WIDTH);
+		this.sut.insert(mock);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnInsertOneArticleWithTooSmallTotalWidth()
+	{
+		Article mock = mock(Article.class);
+		when(mock.getWidth()).thenReturn(TestStorageLocation.TOO_SMALL_WIDTH);
+		this.sut.insert(mock);
 	}
 
 	@Test
