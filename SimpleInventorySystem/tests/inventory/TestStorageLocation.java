@@ -9,6 +9,8 @@ import java.util.LinkedList;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 public class TestStorageLocation {
 
@@ -23,6 +25,8 @@ public class TestStorageLocation {
 
 		TestStorageLocation.SUT = new StorageLocation(
 				TestStorageLocation.VALIDSTORAGE_NAME);
+		MockitoAnnotations.initMocks(TestStorageLocation.class);
+
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -85,6 +89,17 @@ public class TestStorageLocation {
 	public void shouldThrowOnNullArticleNumber()
 	{
 		TestStorageLocation.SUT.getArticles(null);
+	}
+	
+	@Test
+	public void shoudAddOneArticle()
+	{
+		Article mock = mock(Article.class);
+		when(mock.getArtNr()).thenReturn("articleName");
+		TestStorageLocation.SUT.insert(mock);
+		
+		assertEquals(1, TestStorageLocation.SUT.getArticles("articleName").size());
+		assertEquals("articleName", TestStorageLocation.SUT.getArticles("articleName").get(0).getArtNr());
 	}
 
 	private LinkedList<Article> generateArticles(int count, double width) {
