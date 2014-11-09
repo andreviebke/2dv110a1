@@ -12,6 +12,7 @@ public class StorageLocation {
 	private List<Article> articles;
 
 	public StorageLocation(String name) {
+		
 		if (null == name)
 			throw new IllegalArgumentException();
 
@@ -21,9 +22,13 @@ public class StorageLocation {
 
 	public StorageLocation(String name, List<Article> input) {
 
+		// Set articles
 		if (input.size() > StorageLocation.MAX_ARTICLES)
 			throw new IllegalArgumentException();
+		
+		this.articles = input;
 
+		// Check width
 		double totWidth = 0;
 
 		for (Article a : input)
@@ -31,19 +36,30 @@ public class StorageLocation {
 
 		if (totWidth >= StorageLocation.MAX_WIDTH)
 			throw new IllegalArgumentException();
-
-		this.articles = input;
+		
 	}
 
 	public String getName() {
+		
 		return this.name;
 	}
 
+	/**
+	 * Returns all articles at this location
+	 * @return all articles at location
+	 */
 	public List<Article> getArticles() {
+		
 		return this.articles;
 	}
 
-	public LinkedList<Article> getAllArticles(String string) {
+	/**
+	 * Returns all articles with given article id
+	 * @param string - article id
+	 * @return all articles with given article id
+	 */
+	public LinkedList<Article> getArticles(String string) {
+		
 		LinkedList<Article> tmpList = new LinkedList<Article>();
 		
 		for(Article a : this.articles)
@@ -55,9 +71,5 @@ public class StorageLocation {
 		}
 		
 		return tmpList;
-	}
-
-	public LinkedList<Article> getAllArticles() {
-		return (LinkedList<Article>) this.articles;
 	}
 }
