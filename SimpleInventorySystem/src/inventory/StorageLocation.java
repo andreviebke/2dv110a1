@@ -71,8 +71,7 @@ public class StorageLocation {
 		if (null == string)
 			throw new IllegalArgumentException();
 
-		LinkedList<Article> tmpList = new LinkedList<Article>();
-		getArticlesWithId(string, tmpList);
+		LinkedList<Article> tmpList = getArticlesWithId(string);	
 
 		return tmpList;
 	}
@@ -128,9 +127,7 @@ public class StorageLocation {
 		if (null == string)
 			throw new IllegalArgumentException();
 
-		LinkedList<Article> tmpList = new LinkedList<Article>();
-
-		getArticlesWithId(string, tmpList);
+		LinkedList<Article> tmpList = getArticlesWithId(string);		
 
 		for (Article tmpArticle : tmpList)
 			this.articles.remove(tmpArticle);
@@ -175,10 +172,14 @@ public class StorageLocation {
 	 * @param tmpList
 	 *            - list
 	 */
-	private void getArticlesWithId(String string, LinkedList<Article> tmpList) {
+	private LinkedList<Article> getArticlesWithId(String string) {
+		LinkedList<Article> articles = new LinkedList<Article>();
+		
 		for (Article a : this.articles)
 			if (a.getArtNr().equalsIgnoreCase(string))
-				tmpList.add(a);
+				articles.add(a);
+		
+		return articles;
 	}
 
 	/**
