@@ -89,4 +89,26 @@ public class StorageLocation {
 		
 		this.articles.addAll(articles);		
 	}
+
+	public LinkedList<Article> pickAll(String string) {
+
+		if(null == string)
+			throw new IllegalArgumentException();
+		
+		LinkedList<Article> tmpList = new LinkedList<Article>();
+		
+		for(Article a : this.articles)
+		{
+			if(a.getArtNr().equalsIgnoreCase(string))
+			{
+				tmpList.add(a);
+			}
+		}
+		
+		return tmpList;
+	}
+
+	public LinkedList<Article> pickAll() {
+		return (LinkedList<Article>) this.articles;
+	}
 }
