@@ -33,7 +33,7 @@ public class TestStorageLocation {
 
 	@Test
 	public void shouldCreateInstanceWithName() {
-		assertEquals(TestStorage.SUT.getName(),
+		assertEquals(TestStorageLocation.SUT.getName(),
 				TestStorageLocation.VALIDSTORAGE_NAME);
 	}
 
@@ -79,6 +79,12 @@ public class TestStorageLocation {
 		LinkedList<Article> output = TestStorageLocation.SUT
 				.getArticles(TestStorageLocation.NON_EXISTING_ART_NR);
 		assertEquals(0, output.size());
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnNullArticleNumber()
+	{
+		TestStorageLocation.SUT.getArticles(null);
 	}
 
 	private LinkedList<Article> generateArticles(int count, double width) {
