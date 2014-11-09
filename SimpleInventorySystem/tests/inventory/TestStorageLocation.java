@@ -181,7 +181,7 @@ public class TestStorageLocation {
 	}
 	
 	@Test
-	public void shouldPickGivenCountOfArticleWithId()
+	public void shouldPickGivenCountOfArticlesWithIdWhenCountIsSmallerThantTotalArticles()
 	{
 		LinkedList<Article> articles = insert5Articles();
 
@@ -193,10 +193,27 @@ public class TestStorageLocation {
 		
 		LinkedList<Article> pickedList = this.sut.pick("articleNumber", 2);
 		
-		verify(articles.get(0)).getArtNr();
-		verify(articles.get(1)).getArtNr();
+		this.verifyInvokeGetArtNr(articles);
 		
 		assertEquals(2, pickedList.size());
+	}
+	
+	@Test
+	public void shouldPickAsManyAsPossibleWhenCountIsLargerThanTotalArticles()
+	{
+		LinkedList<Article> articles = insert5Articles();
+
+		when(articles.get(0).getArtNr()).thenReturn("articleNumber");
+		when(articles.get(1).getArtNr()).thenReturn("articleNumber");
+		when(articles.get(2).getArtNr()).thenReturn("articleNumber");
+		when(articles.get(3).getArtNr()).thenReturn("articleNumber2");
+		when(articles.get(4).getArtNr()).thenReturn("articleNumber2");
+		
+		LinkedList<Article> pickedList = this.sut.pick("articleNumber", 4);
+		
+		this.verifyInvokeGetArtNr(articles);
+		
+		assertEquals(3, pickedList.size());
 	}
 
 	private LinkedList<Article> insert5Articles() {
