@@ -105,10 +105,17 @@ public class StorageLocation {
 			}
 		}
 		
+		for(Article tmpArticle : tmpList)
+		{
+			this.articles.remove(tmpArticle);
+		}
+		
 		return tmpList;
 	}
 
 	public LinkedList<Article> pickAll() {
-		return (LinkedList<Article>) this.articles;
+		LinkedList<Article> tmpList = new LinkedList<Article>(this.articles);
+		this.articles.clear();
+		return tmpList;
 	}
 }
