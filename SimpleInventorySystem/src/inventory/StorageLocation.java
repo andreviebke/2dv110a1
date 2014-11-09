@@ -11,6 +11,12 @@ public class StorageLocation {
 	private String name;
 	private List<Article> articles;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param name
+	 *            of storage location
+	 */
 	public StorageLocation(String name) {
 		
 		if (null == name)
@@ -20,18 +26,23 @@ public class StorageLocation {
 		this.articles = new LinkedList<Article>();
 	}
 
-	public StorageLocation(String name, List<Article> input) {
+	/**
+	 * Constructor
+	 * @param name of storage location
+	 * @param articles
+	 */
+	public StorageLocation(String name, List<Article> articles) {
 
 		// Set articles
-		if (input.size() > StorageLocation.MAX_ARTICLES)
+		if (articles.size() > StorageLocation.MAX_ARTICLES)
 			throw new IllegalArgumentException();
 		
-		this.articles = input;
+		this.articles = articles;
 
 		// Check width
 		double totWidth = 0;
 
-		for (Article a : input)
+		for (Article a : articles)
 			totWidth += a.getWidth();
 
 		if (totWidth >= StorageLocation.MAX_WIDTH)
@@ -39,6 +50,10 @@ public class StorageLocation {
 		
 	}
 
+	/**
+	 * Returns name
+	 * @return name
+	 */
 	public String getName() {
 		
 		return this.name;
@@ -48,8 +63,7 @@ public class StorageLocation {
 	 * Returns all articles at this location
 	 * @return all articles at location
 	 */
-	public List<Article> getArticles() {
-		
+	public List<Article> getArticles() {		
 		return this.articles;
 	}
 
@@ -66,16 +80,16 @@ public class StorageLocation {
 		LinkedList<Article> tmpList = new LinkedList<Article>();
 		
 		for(Article a : this.articles)
-		{
 			if(a.getArtNr().equalsIgnoreCase(string))
-			{
 				tmpList.add(a);
-			}
-		}
 		
 		return tmpList;
 	}
 
+	/**
+	 * Inserts one article
+	 * @param article to insert
+	 */
 	public void insert(Article article) {
 		if(null == article)
 			throw new IllegalArgumentException();
@@ -83,6 +97,10 @@ public class StorageLocation {
 		this.articles.add(article);
 	}
 
+	/**
+	 * Inserts a list of articles
+	 * @param articles to insert
+	 */
 	public void insertMany(LinkedList<Article> articles) {
 		if(null == articles)
 			throw new IllegalArgumentException();
@@ -90,6 +108,11 @@ public class StorageLocation {
 		this.articles.addAll(articles);		
 	}
 
+	/**
+	 * Picks all articles with given article id
+	 * @param string - article id
+	 * @return all articles with given article id
+	 */
 	public LinkedList<Article> pickAll(String string) {
 
 		if(null == string)
@@ -98,21 +121,19 @@ public class StorageLocation {
 		LinkedList<Article> tmpList = new LinkedList<Article>();
 		
 		for(Article a : this.articles)
-		{
 			if(a.getArtNr().equalsIgnoreCase(string))
-			{
 				tmpList.add(a);
-			}
-		}
 		
 		for(Article tmpArticle : tmpList)
-		{
 			this.articles.remove(tmpArticle);
-		}
 		
 		return tmpList;
 	}
 
+	/**
+	 * Picks all articles
+	 * @return all articles
+	 */
 	public LinkedList<Article> pickAll() {
 		LinkedList<Article> tmpList = new LinkedList<Article>(this.articles);
 		this.articles.clear();
