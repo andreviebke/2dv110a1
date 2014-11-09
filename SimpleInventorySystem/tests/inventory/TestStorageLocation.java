@@ -161,7 +161,8 @@ public class TestStorageLocation {
 	public void shouldThrowWhenAddingTooLargeWidthToExistingArticles() {
 		this.createSUTWithValidName();
 
-		Article mock1 = this.createMockArticle(TestStorageLocation.TOO_LARGE_WIDTH / 2,
+		Article mock1 = this.createMockArticle(
+				TestStorageLocation.TOO_LARGE_WIDTH / 2,
 				TestStorageLocation.ARTICLE_NAME);
 
 		Article mock2 = this.createMockArticle(
@@ -219,10 +220,44 @@ public class TestStorageLocation {
 		this.sut.insertMany(articles);
 	}
 
-	// TODO test when adding too many articles at once
-	// TODO test when adding too many articles already existing
-	// TODO test when adding too large articles when existing
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnInsertTooManyArticlesAtOnce() {
+		this.createSUTWithValidName();
 
+		LinkedList<Article> articles = this.generateArticles(
+				StorageLocation.MAX_ARTICLES + 1,
+				TestStorageLocation.VALID_WIDTH);
+
+		this.verifyInvokeGetWidth(articles);
+
+		this.sut.insertMany(articles);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnInsertTooManyArticlesWhenExisting() {
+		this.createSUTWithValidName();
+
+		LinkedList<Article> articles = this.insert5Articles();
+		articles.addAll(this.generateArticles(StorageLocation.MAX_ARTICLES
+				- (5 - 1), TestStorageLocation.VALID_WIDTH));
+		this.sut.insertMany(articles);
+
+		this.verifyInvokeGetWidth(articles);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnInsertManyArticlesWhenTooLargeWidthWithExisting() {
+		this.createSUTWithValidName();
+		
+		 this.insert5Articles();
+		 
+		LinkedList<Article> articles = new LinkedList<Article>();		
+		articles.add(this.createMockArticle(StorageLocation.MAX_WIDTH,
+				TestStorageLocation.ARTICLE_NAME));
+		this.sut.insertMany(articles);
+		
+		this.verifyInvokeGetWidth(articles);
+	}
 	/*
 	 * Pick
 	 */
