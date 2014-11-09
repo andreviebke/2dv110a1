@@ -60,6 +60,9 @@ public class StorageLocation {
 	 */
 	public LinkedList<Article> getArticles(String string) {
 		
+		if(null == string)
+			throw new IllegalArgumentException();
+		
 		LinkedList<Article> tmpList = new LinkedList<Article>();
 		
 		for(Article a : this.articles)
