@@ -112,27 +112,39 @@ public class TestStorageLocation {
 	}
 
 	@Test
-	public void shouldInsertTwice() {		
-		insert5Articles();		
+	public void shouldInsertTwice() {
+		insert5Articles();
 		insert5Articles();
 
 		assertEquals(10, this.sut.getArticles().size());
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnInsertOneArticleWithTooLargeTotalWidth()
-	{
+	public void shouldThrowOnInsertOneArticleWithTooLargeTotalWidth() {
 		Article mock = mock(Article.class);
 		when(mock.getWidth()).thenReturn(TestStorageLocation.TOO_LARGE_WIDTH);
 		this.sut.insert(mock);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnInsertOneArticleWithTooSmallTotalWidth()
-	{
+	public void shouldThrowOnInsertOneArticleWithTooSmallTotalWidth() {
 		Article mock = mock(Article.class);
 		when(mock.getWidth()).thenReturn(TestStorageLocation.TOO_SMALL_WIDTH);
 		this.sut.insert(mock);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnInsertManyArticlesWithTooLargeTotalWidth() {
+		LinkedList<Article> articles = this.generateArticles(5,
+				this.TOO_LARGE_WIDTH / 5);
+		this.sut.insertMany(articles);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnInsertManyArticlesWithTooSmallTotalWidth() {
+		LinkedList<Article> articles = this.generateArticles(5,
+				this.TOO_SMALL_WIDTH / 5);
+		this.sut.insertMany(articles);
 	}
 
 	@Test
@@ -143,7 +155,7 @@ public class TestStorageLocation {
 		assertEquals(5, pickedArticles.size());
 		assertEquals(0, this.sut.getArticles().size());
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowWhenPickNullArticleNumber() {
 		this.sut.pickAll(null);
@@ -153,7 +165,7 @@ public class TestStorageLocation {
 	public void shouldPickAllArticlesWithArticleNumber() {
 
 		LinkedList<Article> articles = insert5Articles();
-		
+
 		when(articles.get(0).getArtNr()).thenReturn("articleNumber");
 		when(articles.get(1).getArtNr()).thenReturn("articleNumber");
 		when(articles.get(2).getArtNr()).thenReturn("articleNumber");
@@ -163,7 +175,7 @@ public class TestStorageLocation {
 		LinkedList<Article> pickedArticles = this.sut.pickAll("articleNumber");
 
 		this.verifyInvokeGetArtNr(articles);
-		
+
 		assertEquals(3, pickedArticles.size());
 		assertEquals(2, this.sut.getArticles().size());
 	}
