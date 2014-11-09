@@ -196,7 +196,7 @@ public class StorageLocation {
 		LinkedList<Article> allArticles = this.getArticles(string);
 		LinkedList<Article> pickedArticles = new LinkedList<Article>();
 		
-		for(int i=0; i<count; i++)
+		for(int i=0; i<count && i<allArticles.size(); i++)
 			pickedArticles.add(allArticles.get(i));
 			
 		return pickedArticles;
