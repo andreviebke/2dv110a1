@@ -86,16 +86,11 @@ public class StorageLocation {
 		if (null == article)
 			throw new IllegalArgumentException();
 
-		this.checkWidth(new LinkedList<Article>() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			{
-				add(article);
-			}
-		});
+		LinkedList<Article> articles = new LinkedList<Article>(this.articles);
+		articles.add(article);
+		
+		this.checkWidth(articles);
+		this.checkNumArticles(articles);
 
 		this.articles.add(article);
 	}
