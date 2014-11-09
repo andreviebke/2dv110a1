@@ -228,9 +228,9 @@ public class TestStorageLocation {
 				StorageLocation.MAX_ARTICLES + 1,
 				TestStorageLocation.VALID_WIDTH);
 
-		this.verifyInvokeGetWidth(articles);
-
 		this.sut.insertMany(articles);
+		
+		this.verifyInvokeGetWidth(articles);
 	}
 
 	@Test(expected = IllegalArgumentException.class)

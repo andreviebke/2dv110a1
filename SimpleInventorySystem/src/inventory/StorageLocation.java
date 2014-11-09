@@ -105,7 +105,10 @@ public class StorageLocation {
 		if (null == articles)
 			throw new IllegalArgumentException();
 
-		this.checkWidth(articles);
+		LinkedList<Article> allArticles = new LinkedList<Article>(articles);
+		allArticles.addAll(this.articles);
+		this.checkWidth(allArticles);
+		this.checkNumArticles(allArticles);
 
 		this.articles.addAll(articles);
 	}
