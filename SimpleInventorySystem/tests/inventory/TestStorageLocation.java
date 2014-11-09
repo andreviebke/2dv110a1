@@ -7,9 +7,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.LinkedList;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 public class TestStorageLocation {
@@ -18,12 +17,12 @@ public class TestStorageLocation {
 	private static String NON_EXISTING_ART_NR = "123456";
 	private static int VALID_NUM_ARTICLES = 1;
 	private static double TOO_LARGE_WIDTH = 1000.0;
-	private static StorageLocation SUT;
+	private StorageLocation sut;
 
-	@BeforeClass
-	public static void beforeClass() {
+	@Before
+	public void beforeClass() {
 
-		TestStorageLocation.SUT = new StorageLocation(
+		this.sut = new StorageLocation(
 				TestStorageLocation.VALIDSTORAGE_NAME);
 		MockitoAnnotations.initMocks(TestStorageLocation.class);
 
@@ -37,7 +36,7 @@ public class TestStorageLocation {
 
 	@Test
 	public void shouldCreateInstanceWithName() {
-		assertEquals(TestStorageLocation.SUT.getName(),
+		assertEquals(this.sut.getName(),
 				TestStorageLocation.VALIDSTORAGE_NAME);
 	}
 
@@ -72,7 +71,7 @@ public class TestStorageLocation {
 	@Test
 	public void shouldReturnNoArticles() {
 
-		LinkedList<Article> output = (LinkedList<Article>) TestStorageLocation.SUT
+		LinkedList<Article> output = (LinkedList<Article>) this.sut
 				.getArticles();
 		assertEquals(0, output.size());
 	}
@@ -80,7 +79,7 @@ public class TestStorageLocation {
 	@Test
 	public void shouldReturnNoArticlesWhenInvalidArticleNumber() {
 
-		LinkedList<Article> output = TestStorageLocation.SUT
+		LinkedList<Article> output = this.sut
 				.getArticles(TestStorageLocation.NON_EXISTING_ART_NR);
 		assertEquals(0, output.size());
 	}
@@ -88,7 +87,7 @@ public class TestStorageLocation {
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowOnNullArticleNumber()
 	{
-		TestStorageLocation.SUT.getArticles(null);
+		this.sut.getArticles(null);
 	}
 	
 	@Test
@@ -96,10 +95,10 @@ public class TestStorageLocation {
 	{
 		Article mock = mock(Article.class);
 		when(mock.getArtNr()).thenReturn("articleName");
-		TestStorageLocation.SUT.insert(mock);
+		this.sut.insert(mock);
 		
-		assertEquals(1, TestStorageLocation.SUT.getArticles("articleName").size());
-		assertEquals("articleName", TestStorageLocation.SUT.getArticles("articleName").get(0).getArtNr());
+		assertEquals(1, this.sut.getArticles("articleName").size());
+		assertEquals("articleName", this.sut.getArticles("articleName").get(0).getArtNr());
 	}
 
 	private LinkedList<Article> generateArticles(int count, double width) {

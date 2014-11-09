@@ -75,4 +75,8 @@ public class StorageLocation {
 		
 		return tmpList;
 	}
+
+	public void insert(Article mock) {
+		this.articles.add(mock);
+	}
 }
