@@ -5,7 +5,8 @@ import java.util.List;
 
 public class StorageLocation {
 
-	public static double MAX_WIDTH = 1000;
+	public static double MAX_WIDTH = 999;
+	public static double MIN_WIDTH = 0;
 	public static int MAX_ARTICLES = 10;
 
 	private String name;
@@ -92,6 +93,12 @@ public class StorageLocation {
 	 */
 	public void insert(Article article) {
 		if(null == article)
+			throw new IllegalArgumentException();
+
+		if(article.getWidth() > StorageLocation.MAX_WIDTH)
+			throw new IllegalArgumentException();
+		
+		if(article.getWidth() < StorageLocation.MIN_WIDTH)
 			throw new IllegalArgumentException();
 		
 		this.articles.add(article);
