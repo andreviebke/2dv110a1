@@ -136,14 +136,14 @@ public class TestStorageLocation {
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowOnInsertManyArticlesWithTooLargeTotalWidth() {
 		LinkedList<Article> articles = this.generateArticles(5,
-				this.TOO_LARGE_WIDTH / 5);
+				TestStorageLocation.TOO_LARGE_WIDTH / 5);
 		this.sut.insertMany(articles);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowOnInsertManyArticlesWithTooSmallTotalWidth() {
 		LinkedList<Article> articles = this.generateArticles(5,
-				this.TOO_SMALL_WIDTH / 5);
+				TestStorageLocation.TOO_SMALL_WIDTH / 5);
 		this.sut.insertMany(articles);
 	}
 
