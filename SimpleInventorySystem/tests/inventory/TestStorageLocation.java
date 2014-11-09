@@ -193,8 +193,8 @@ public class TestStorageLocation {
 		
 		LinkedList<Article> pickedList = this.sut.pick("articleNumber", 2);
 		
-		verify(articles.get(0).getArtNr());
-		verify(articles.get(2).getArtNr());
+		verify(articles.get(0)).getArtNr();
+		verify(articles.get(1)).getArtNr();
 		
 		assertEquals(2, pickedList.size());
 	}

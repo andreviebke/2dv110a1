@@ -191,4 +191,14 @@ public class StorageLocation {
 		if (articles.size() > StorageLocation.MAX_ARTICLES)
 			throw new IllegalArgumentException();
 	}
+
+	public LinkedList<Article> pick(String string, int count) {
+		LinkedList<Article> allArticles = this.getArticles(string);
+		LinkedList<Article> pickedArticles = new LinkedList<Article>();
+		
+		for(int i=0; i<count; i++)
+			pickedArticles.add(allArticles.get(i));
+			
+		return pickedArticles;
+	}
 }
