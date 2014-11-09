@@ -87,6 +87,6 @@ public class StorageLocation {
 		if(null == articles)
 			throw new IllegalArgumentException();
 		
-		this.articles = articles;		
+		this.articles.addAll(articles);		
 	}
 }
