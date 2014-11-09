@@ -17,15 +17,14 @@ public class TestStorageLocation {
 	private static String NON_EXISTING_ART_NR = "123456";
 	private static int VALID_NUM_ARTICLES = 1;
 	private static double TOO_LARGE_WIDTH = 1000.0;
+	private static String ARTICLE_NAME = "articleName";
 	private StorageLocation sut;
 
 	@Before
 	public void beforeClass() {
 
-		this.sut = new StorageLocation(
-				TestStorageLocation.VALIDSTORAGE_NAME);
+		this.sut = new StorageLocation(TestStorageLocation.VALIDSTORAGE_NAME);
 		MockitoAnnotations.initMocks(TestStorageLocation.class);
-
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -36,8 +35,7 @@ public class TestStorageLocation {
 
 	@Test
 	public void shouldCreateInstanceWithName() {
-		assertEquals(this.sut.getName(),
-				TestStorageLocation.VALIDSTORAGE_NAME);
+		assertEquals(this.sut.getName(), TestStorageLocation.VALIDSTORAGE_NAME);
 	}
 
 	@Test
@@ -83,22 +81,44 @@ public class TestStorageLocation {
 				.getArticles(TestStorageLocation.NON_EXISTING_ART_NR);
 		assertEquals(0, output.size());
 	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnNullArticleNumber() {
+		this.sut.getArticles(null);
+	}
+
+	@Test
+	public void shoudInsertOneArticle() {
+		Article mock = mock(Article.class);
+		when(mock.getArtNr()).thenReturn(TestStorageLocation.ARTICLE_NAME);
+		this.sut.insert(mock);
+
+		assertEquals(1, this.sut.getArticles(TestStorageLocation.ARTICLE_NAME)
+				.size());
+		assertEquals(TestStorageLocation.ARTICLE_NAME,
+				this.sut.getArticles(TestStorageLocation.ARTICLE_NAME).get(0)
+						.getArtNr());
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnNullArticleNumber()
+	public void shouldThrowWhenInsertNullArticle()
 	{
-		this.sut.getArticles(null);
+		this.sut.insert(null);
 	}
 	
 	@Test
-	public void shoudAddOneArticle()
+	public void shouldInsertSeveralArticles()
 	{
-		Article mock = mock(Article.class);
-		when(mock.getArtNr()).thenReturn("articleName");
-		this.sut.insert(mock);
+		LinkedList<Article> articles = this.generateArticles(5, 10);
+		this.sut.insertmany(articles);
 		
-		assertEquals(1, this.sut.getArticles("articleName").size());
-		assertEquals("articleName", this.sut.getArticles("articleName").get(0).getArtNr());
+		assertEquals(5, this.sut.getArticles().size());	
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowWhenUInsertNullArticleList()
+	{
+		this.sut.insertMany(null);
 	}
 
 	private LinkedList<Article> generateArticles(int count, double width) {
