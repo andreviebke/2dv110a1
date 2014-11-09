@@ -2,21 +2,22 @@ package inventory;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.awt.List;
 import java.util.LinkedList;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class TestStorageLocation {
 
 	private static String VALIDSTORAGE_NAME = "MyStorageLocation";
 	private static int VALID_NUM_ARTICLES = 1;
-
+	
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnNull() {
+	public void shouldThrowOnNullName() {
 		new StorageLocation(null);
 	}
 
@@ -55,6 +56,22 @@ public class TestStorageLocation {
 		new StorageLocation(TestStorageLocation.VALIDSTORAGE_NAME, articles);
 
 		this.verifyInvokeGetWidth(articles);
+	}
+	
+	@Test
+	public void shouldReturnNoArticles()
+	{
+		StorageLocation sut = new StorageLocation("someName");
+		LinkedList<Article> output = sut.getAllArticles();
+		assertEquals(0, output.size());
+	}
+	
+	@Test
+	public void shouldReturnNoArticlesWhenInvalidArticleNumber()
+	{
+		StorageLocation sut = new StorageLocation("someName");
+		LinkedList<Article> output = sut.getAllArticles("124568");
+		assertEquals(0, output.size());
 	}
 
 	public LinkedList<Article> createArticles(int count, double width) {

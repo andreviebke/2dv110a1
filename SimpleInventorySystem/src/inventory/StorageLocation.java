@@ -1,12 +1,13 @@
 package inventory;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class StorageLocation {
 
 	public static double MAX_WIDTH = 1000;
 	public static int MAX_ARTICLES = 10;
-	
+
 	private String name;
 	private List<Article> articles;
 
@@ -20,16 +21,16 @@ public class StorageLocation {
 	public StorageLocation(String name, List<Article> input) {
 
 		if (input.size() > StorageLocation.MAX_ARTICLES)
-			throw new IllegalArgumentException();		
+			throw new IllegalArgumentException();
 
 		double totWidth = 0;
-		
-		for(Article a : input)
+
+		for (Article a : input)
 			totWidth += a.getWidth();
-		
-		if(totWidth >= StorageLocation.MAX_WIDTH)
+
+		if (totWidth >= StorageLocation.MAX_WIDTH)
 			throw new IllegalArgumentException();
-			
+
 		this.articles = input;
 	}
 
@@ -40,5 +41,4 @@ public class StorageLocation {
 	public List<Article> getArticles() {
 		return this.articles;
 	}
-
 }
