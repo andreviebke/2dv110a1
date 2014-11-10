@@ -46,28 +46,28 @@ public class Stock {
 		if (locs.size() + this.storageLocations.size() > Stock.MAX_STORAGE_LOCATIONS)
 			throw new TooManyStorageLocationsException();
 
+		addStorageLocationsInternal(locs);
+	}
+
+	private void addStorageLocationsInternal(List<StorageLocation> locs) {
 		LinkedList<StorageLocation> toInsert = new LinkedList<StorageLocation>();
-		boolean exists = false;
-		
-		for (StorageLocation insertLoc : locs)
-		{
+
+		boolean exists;
+		for (StorageLocation insertLoc : locs) {
 			exists = false;
-			
-			for (StorageLocation currentLoc : this.storageLocations)
-			{
-				if (currentLoc == insertLoc)
-				{
+
+			for (StorageLocation currentLoc : this.storageLocations) {
+				if (currentLoc == insertLoc) {
 					exists = true;
 					break;
 				}
 			}
-			
-			if(!exists)
-			{
+
+			if (!exists) {
 				toInsert.add(insertLoc);
 			}
 		}
-		
+
 		this.storageLocations.addAll(toInsert);
 	}
 
