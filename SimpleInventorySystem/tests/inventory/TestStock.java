@@ -137,7 +137,7 @@ public class TestStock {
 	}
 	
 	@Test
-	public void shouldIgnoreAddingDuplicatesInInputSetWhenAddingMany()
+	public void shouldIgnoreAddingDuplicatesInInputListWhenAddingMany()
 	{
 		LinkedList<StorageLocation> locations = this
 				.generateStorageLocations(Stock.MAX_STORAGE_LOCATIONS);

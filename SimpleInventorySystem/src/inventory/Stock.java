@@ -75,14 +75,14 @@ public class Stock {
 		if (null == locs)
 			throw new IllegalArgumentException();
 
-		LinkedList<StorageLocation> noInternalDuplicates = this.removeInternalDuplications(
-				locs);
-		LinkedList<StorageLocation> toInsert = this.removeExternalDuplications(
+		LinkedList<StorageLocation> noInternalDuplicates = this
+				.removeInternalDuplications(locs);
+		LinkedList<StorageLocation> nonExternalDuplicates = this.removeExternalDuplications(
 				noInternalDuplicates, this.storageLocations);
 
-		this.checkStorageCount(toInsert.size());
+		this.checkStorageCount(nonExternalDuplicates.size());
 
-		this.storageLocations.addAll(toInsert);
+		this.storageLocations.addAll(nonExternalDuplicates);
 
 	}
 
@@ -113,34 +113,33 @@ public class Stock {
 	private LinkedList<StorageLocation> removeInternalDuplications(
 			List<StorageLocation> toInsert) {
 
-		LinkedList<StorageLocation> toReturn = new LinkedList<StorageLocation>(new LinkedHashSet<StorageLocation>(toInsert));
+		LinkedList<StorageLocation> toReturn = new LinkedList<StorageLocation>(
+				new LinkedHashSet<StorageLocation>(toInsert));
 
 		return toReturn;
 	}
-	
+
+	/**
+	 * Removes external duplications, i.e. duplicated storage locations to be
+	 * inserted
+	 * 
+	 * @param newLocations
+	 *            - locations to insert
+	 * @param existingLocations
+	 *            - existing locations at stock
+	 * @return List without duplications
+	 */
 	private LinkedList<StorageLocation> removeExternalDuplications(
-			List<StorageLocation> toInsert, List<StorageLocation> toCheckAgainst) {
-		LinkedList<StorageLocation> toReturn = new LinkedList<StorageLocation>();
+			List<StorageLocation> newLocations,
+			List<StorageLocation> existingLocations) {
+		LinkedList<StorageLocation> toReturn = new LinkedList<StorageLocation>(
+				newLocations);
 
-		boolean exists;
-		for (int i = 0; i < toInsert.size(); i++) {
-			exists = false;
-
-			for (int j = 0; j < toCheckAgainst.size(); j++) {
-				if (toInsert.get(i) == toCheckAgainst.get(j)) {
-					exists = true;
-					break;
-				}
-			}
-
-			if (!exists) {
-				toReturn.add(toInsert.get(i));
-			}
-		}
+		toReturn.removeAll(existingLocations);
 
 		return toReturn;
 	}
-	
+
 	/**
 	 * Checks the storage count including numbersTOAdd
 	 * 
