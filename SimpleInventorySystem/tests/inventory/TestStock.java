@@ -45,6 +45,11 @@ public class TestStock {
 		assertEquals(TestStock.JUST_BELOW_HIGH, this.sut.getTemperature());
 	}
 	
+	@Test
+	public void shoudlGetIntMinTemperatureWhenNotSet() {
+		assertEquals(Double.MIN_VALUE, this.sut.getTemperature());
+	}
+	
 	/*
 	 * Storage locations
 	 */
