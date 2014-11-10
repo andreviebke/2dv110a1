@@ -1,7 +1,6 @@
 package inventory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -347,6 +346,7 @@ public class TestStock {
 			verify(art).getWidth();
 		
 		assertFalse(s2.getArticles().size() == 0);
+		assertFalse(s1.getArticles().size() == articleListS1.size() + articleListS2.size());
 	}
 
 	/*

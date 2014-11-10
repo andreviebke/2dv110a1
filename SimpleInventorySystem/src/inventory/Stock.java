@@ -194,4 +194,31 @@ public class Stock {
 		return foundArticles;
 	}
 
+	public void mergeStorageLocations(StorageLocation s1, StorageLocation s2) {
+		double totWidth = 0;
+		double totArticles = 0;
+		
+		for(Article art : s1.getArticles())
+		{
+			totWidth += art.getWidth();
+			totArticles ++;
+		}	
+		
+		for(Article art : s2.getArticles())
+		{
+			totWidth += art.getWidth();
+			totArticles ++;
+		}
+
+		if(totWidth > StorageLocation.MAX_WIDTH)
+			return;
+		
+		if(totArticles > StorageLocation.MAX_ARTICLES)
+			return;
+		
+		this.moveAllArticles(s1, s2);
+		this.storageLocations.remove(s2);
+		
+	}
+
 }
