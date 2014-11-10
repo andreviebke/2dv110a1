@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+
 public class TestStock {
 
 	private Stock sut;
@@ -45,46 +46,59 @@ public class TestStock {
 		this.sut.setTemperature(TestStock.JUST_BELOW_HIGH);
 		assertEquals(TestStock.JUST_BELOW_HIGH, this.sut.getTemperature());
 	}
-	
+
 	@Test
 	public void shoudlGetIntMinTemperatureWhenNotSet() {
 		assertEquals(Double.MIN_VALUE, this.sut.getTemperature());
 	}
-	
+
 	/*
 	 * Storage locations
 	 */
 	@Test
-	public void shouldReturnNoStorageLocations()
-	{
+	public void shouldReturnNoStorageLocations() {
 		List<StorageLocation> locs = this.sut.getStorageLocations();
 		assertEquals(0, locs.size());
 	}
 
 	@Test
-	public void shouldAddStorageLocation()
-	{
+	public void shouldAddStorageLocation() {
 		StorageLocation loc = mock(StorageLocation.class);
 		this.sut.addStorageLocation(loc);
 		assertEquals(1, this.sut.getStorageLocations().size());
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowWhenAddingOneNullStorageLocation()
-	{
+	public void shouldThrowWhenAddingOneNullStorageLocation() {
 		this.sut.addStorageLocation(null);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowWhenAddingManyNullStorageLocation()
-	{	
+	public void shouldThrowWhenAddingManyNullStorageLocation() {
 		this.sut.addStorageLocations(null);
 	}
-	
+
 	@Test
-	public void shouldAddManyStorageLocations()
-	{
-		LinkedList<StorageLocation> locs = generateStorageLocations();			
+	public void shouldAddManyStorageLocations() {
+		LinkedList<StorageLocation> locs = generateStorageLocations();
+		this.sut.addStorageLocations(locs);
+	}
+
+	@Test(expected = TooManyStorageLocationsException.class)
+	public void shouldThrowWhenAddingTooManyStorageLocationsAtOnce() {
+		LinkedList<StorageLocation> locs = generateStorageLocations();
+		locs.add(mock(StorageLocation.class));
+		this.sut.addStorageLocations(locs);
+	}
+
+	@Test(expected = TooManyStorageLocationsException.class)
+	public void shouldThrowWhenAddingTooManyStorageLocationsAlreadyExisting() {
+		LinkedList<StorageLocation> locs = this.generateStorageLocations();
+		this.sut.addStorageLocations(locs);
+		
+		locs = new LinkedList<StorageLocation>();
+		locs.add(mock(StorageLocation.class));
+		
 		this.sut.addStorageLocations(locs);
 	}
 
