@@ -43,13 +43,17 @@ public class Stock {
 		if (null == locs)
 			throw new IllegalArgumentException();
 
-		if (locs.size() + this.storageLocations.size() > Stock.MAX_STORAGE_LOCATIONS)
+		LinkedList<StorageLocation> toInsert = removeDuplications(locs);
+		
+		if (toInsert.size() + this.storageLocations.size() > Stock.MAX_STORAGE_LOCATIONS)
 			throw new TooManyStorageLocationsException();
+		
+		this.storageLocations.addAll(toInsert);
 
-		addStorageLocationsInternal(locs);
 	}
 
-	private void addStorageLocationsInternal(List<StorageLocation> locs) {
+	private LinkedList<StorageLocation> removeDuplications(
+			List<StorageLocation> locs) {
 		LinkedList<StorageLocation> toInsert = new LinkedList<StorageLocation>();
 
 		boolean exists;
@@ -68,7 +72,7 @@ public class Stock {
 			}
 		}
 
-		this.storageLocations.addAll(toInsert);
+		return toInsert;
 	}
 
 }
