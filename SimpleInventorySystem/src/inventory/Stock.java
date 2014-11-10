@@ -183,4 +183,15 @@ public class Stock {
 		
 	}
 
+	public LinkedList<Article> findArticles(String validArtNr2) {
+		LinkedList<Article> foundArticles = new LinkedList<Article>();
+		
+		for(StorageLocation s : this.storageLocations)
+		{
+			foundArticles.addAll(s.getArticles(validArtNr2));
+		}
+		
+		return foundArticles;
+	}
+
 }
