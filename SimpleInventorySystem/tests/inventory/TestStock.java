@@ -2,8 +2,11 @@ package inventory;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
+
+import org.mockito.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +21,8 @@ public class TestStock {
 	private static double JUST_ABOVE_HIGH = Stock.MAX_TEMP + 0.1;
 	private static double JUST_BELOW_HIGH = Stock.MAX_TEMP - 0.1;
 	private static double JUST_ABOVE_LOW = Stock.MIN_TEMP + 0.1;
+	private static final String VALID_STORAGE_NAME = "SomeName";
+	private static final String VALID_STORAGE_NAME_2 = "SomeOtherName";
 
 	@Before
 	public void setUp() throws Exception {
@@ -64,6 +69,31 @@ public class TestStock {
 		assertEquals(0, locs.size());
 	}
 
+	@Test
+	public void shoudlReturnStorageLocationsByName() {
+		LinkedList<StorageLocation> locs = new LinkedList<StorageLocation>();
+
+		for (int i = 0; i < Stock.MAX_STORAGE_LOCATIONS - 1; i++) {
+			StorageLocation mock = mock(StorageLocation.class);
+			when(mock.getName()).thenReturn(TestStock.VALID_STORAGE_NAME);
+			locs.add(mock);
+		}
+
+		StorageLocation mock = mock(StorageLocation.class);
+		when(mock.getName()).thenReturn(TestStock.VALID_STORAGE_NAME_2);
+		locs.add(mock);
+		this.sut.addStorageLocations(locs);
+
+		LinkedList<StorageLocation> output = this.sut.getStorageLocationsByName(TestStock.VALID_STORAGE_NAME);
+		
+		for (int i = 0; i < Stock.MAX_STORAGE_LOCATIONS - 1; i++) {
+			verify(locs.get(i)).getName();
+		}
+		verify(mock).getName();
+
+		assertEquals(Stock.MAX_STORAGE_LOCATIONS - 1, output.size());
+	}
+
 	// Add one storage location
 	@Test
 	public void shouldAddStorageLocation() {
@@ -79,11 +109,11 @@ public class TestStock {
 		this.sut.addStorageLocation(loc);
 		assertEquals(1, this.sut.getStorageLocations().size());
 	}
-	
+
 	@Test(expected = TooManyStorageLocationsException.class)
 	public void shouldThrowOnAddingTooManyStorageLocations() {
 		LinkedList<StorageLocation> locs = this
-				.generateStorageLocations(Stock.MAX_STORAGE_LOCATIONS +1);
+				.generateStorageLocations(Stock.MAX_STORAGE_LOCATIONS + 1);
 		for (int i = 0; i < locs.size(); i++)
 			this.sut.addStorageLocation(locs.get(i));
 	}
@@ -92,7 +122,7 @@ public class TestStock {
 	public void shouldThrowWhenAddingOneNullStorageLocation() {
 		this.sut.addStorageLocation(null);
 	}
-	
+
 	// Add many storage locations
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowWhenAddingManyNullStorageLocation() {
@@ -135,24 +165,22 @@ public class TestStock {
 		this.sut.addStorageLocations(secondLocations);
 		assertEquals(3, this.sut.getStorageLocations().size());
 	}
-	
+
 	@Test
-	public void shouldIgnoreAddingDuplicatesInInputListWhenAddingMany()
-	{
+	public void shouldIgnoreAddingDuplicatesInInputListWhenAddingMany() {
 		LinkedList<StorageLocation> locations = this
 				.generateStorageLocations(Stock.MAX_STORAGE_LOCATIONS);
 		locations.addAll(locations);
 		this.sut.addStorageLocations(locations);
-		
+
 		assertEquals(3, this.sut.getStorageLocations().size());
 	}
 
 	private LinkedList<StorageLocation> generateStorageLocations(int count) {
 		LinkedList<StorageLocation> locs = new LinkedList<StorageLocation>();
 
-		for (int i = 0; i < count; i++)
-		{
-			StorageLocation mock = mock(StorageLocation.class);			
+		for (int i = 0; i < count; i++) {
+			StorageLocation mock = mock(StorageLocation.class);
 			locs.add(mock);
 		}
 
