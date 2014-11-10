@@ -1,5 +1,6 @@
 package inventory;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,6 +37,13 @@ public class Stock {
 			throw new IllegalArgumentException();
 		
 		this.storageLocations.add(loc);
+	}
+
+	public void addStorageLocations(Object object) {
+		if(null == object)
+			throw new IllegalArgumentException();
+		
+		this.storageLocations.addAll((Collection<? extends StorageLocation>) object);
 	}
 
 }
