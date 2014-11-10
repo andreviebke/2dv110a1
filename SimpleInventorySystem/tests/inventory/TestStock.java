@@ -22,5 +22,17 @@ public class TestStock {
 	public void shouldThrowErrorOnABitTooWarm() {
 		this.sut.setTemperature(30.1);	
 	}
+	
+	@Test
+	public void shouldSetTemparatureWhenJustWarmEnough() {
+		this.sut.setTemperature(20.1);
+		assertEquals(20.1, this.sut.getTemperature());
+	}
+	
+	@Test
+	public void shouldSetTemparatureWhenJustColdEnough() {
+		this.sut.setTemperature(29.9);	
+		assertEquals(29.9, this.sut.getTemperature());
+	}
 
 }
