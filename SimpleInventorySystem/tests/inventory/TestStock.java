@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -210,12 +211,17 @@ public class TestStock {
 		LinkedList<Article> expectedAfterArticlesListS1 = new LinkedList<Article>();
 		LinkedList<Article> expectedAfterArticlesListS2 = new LinkedList<Article>();
 
-		this.populateArticleList(TestStock.VALID_ART_NR_1, expectedBeforeArticlesListS1, 2);
-		this.populateArticleList(TestStock.VALID_ART_NR_1, expectedBeforeArticlesListS2, 1);
-		this.populateArticleList(TestStock.VALID_ART_NR_2, expectedBeforeArticlesListS2, 1);
-		this.populateArticleList(TestStock.VALID_ART_NR_1, expectedAfterArticlesListS1, 3);
-		this.populateArticleList(TestStock.VALID_ART_NR_2, expectedAfterArticlesListS1, 1);
-	
+		this.populateArticleList(TestStock.VALID_ART_NR_1,
+				expectedBeforeArticlesListS1, 2);
+		this.populateArticleList(TestStock.VALID_ART_NR_1,
+				expectedBeforeArticlesListS2, 1);
+		this.populateArticleList(TestStock.VALID_ART_NR_2,
+				expectedBeforeArticlesListS2, 1);
+		this.populateArticleList(TestStock.VALID_ART_NR_1,
+				expectedAfterArticlesListS1, 3);
+		this.populateArticleList(TestStock.VALID_ART_NR_2,
+				expectedAfterArticlesListS1, 1);
+
 		when(s1.getArticles()).thenReturn(expectedBeforeArticlesListS1);
 		when(s2.pickAll()).thenReturn(expectedBeforeArticlesListS2);
 
@@ -294,10 +300,12 @@ public class TestStock {
 		LinkedList<Article> articleListS2 = new LinkedList<Article>();
 		this.populateArticleList(TestStock.VALID_ART_NR_1, articleListS1, 3);
 		this.populateArticleList(TestStock.VALID_ART_NR_1, articleListS2, 1);
-		
-		when(s1.getArticles(TestStock.VALID_ART_NR_1)).thenReturn(articleListS1);
-		when(s2.getArticles(TestStock.VALID_ART_NR_1)).thenReturn(articleListS2);
-		
+
+		when(s1.getArticles(TestStock.VALID_ART_NR_1))
+				.thenReturn(articleListS1);
+		when(s2.getArticles(TestStock.VALID_ART_NR_1))
+				.thenReturn(articleListS2);
+
 		this.sut.addStorageLocation(s1);
 		this.sut.addStorageLocation(s2);
 		LinkedList<Article> output = this.sut
@@ -310,11 +318,43 @@ public class TestStock {
 	}
 
 	/*
+	 * Merge storage locations
+	 */
+	@Test
+	public void shouldNotMergeIfArticlesDoesNotFit() {
+		StorageLocation s1 = this
+				.generateStorageLocation(TestStock.VALID_STORAGE_NAME);
+		StorageLocation s2 = this
+				.generateStorageLocation(TestStock.VALID_STORAGE_NAME_2);
+
+		LinkedList<Article> articleListS1 = new LinkedList<Article>();
+		LinkedList<Article> articleListS2 = new LinkedList<Article>();
+		this.populateArticleList(TestStock.VALID_ART_NR_1, articleListS1, 3);
+		this.populateArticleList(TestStock.VALID_ART_NR_2, articleListS2, 1);
+
+		when(s1.getArticles())
+				.thenReturn(articleListS1);
+		when(s2.getArticles())
+				.thenReturn(articleListS2);
+		
+		this.sut.mergeStorageLocations(s1, s2);
+		
+		verify(s1).getArticles();
+		verify(s2).getArticles();
+		for(Article art : articleListS1)
+			verify(art).getWidth();
+		for(Article art : articleListS2)
+			verify(art).getWidth();
+		
+		assertFalse(s2.getArticles().size() == 0);
+	}
+
+	/*
 	 * Helper methods
 	 */
 	private void populateArticleList(String name, LinkedList<Article> articles,
 			int count) {
-		for (int i = 0; i < count; i++)
+		for (int i = 0; i < count; i++) 
 			articles.add(this.generateArticle(name));
 	}
 
@@ -352,9 +392,15 @@ public class TestStock {
 
 	private Article generateArticle(String name) {
 		Article mock = mock(Article.class);
+		
+		if(name == TestStock.VALID_ART_NR_1)
+			when(mock.getWidth()).thenReturn(Article.MAX_WIDTH / 3);
+		else
+			when(mock.getWidth()).thenReturn(Article.MAX_WIDTH / 2);
+		
 		when(mock.getArtNr()).thenReturn(name);
+		
 		return mock;
 	}
 
 }
-
