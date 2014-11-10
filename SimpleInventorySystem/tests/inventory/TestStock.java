@@ -2,15 +2,17 @@ package inventory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.stubbing.OngoingStubbing;
 
 public class TestStock {
 
@@ -208,23 +210,12 @@ public class TestStock {
 		LinkedList<Article> expectedAfterArticlesListS1 = new LinkedList<Article>();
 		LinkedList<Article> expectedAfterArticlesListS2 = new LinkedList<Article>();
 
-		expectedBeforeArticlesListS1.add(this
-				.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedBeforeArticlesListS1.add(this
-				.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedBeforeArticlesListS2.add(this
-				.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedBeforeArticlesListS2.add(this
-				.generateArticle(TestStock.VALID_ART_NR_2));
-		expectedAfterArticlesListS1.add(this
-				.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedAfterArticlesListS1.add(this
-				.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedAfterArticlesListS1.add(this
-				.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedAfterArticlesListS1.add(this
-				.generateArticle(TestStock.VALID_ART_NR_2));
-
+		this.populateArticleList(TestStock.VALID_ART_NR_1, expectedBeforeArticlesListS1, 2);
+		this.populateArticleList(TestStock.VALID_ART_NR_1, expectedBeforeArticlesListS2, 1);
+		this.populateArticleList(TestStock.VALID_ART_NR_2, expectedBeforeArticlesListS2, 1);
+		this.populateArticleList(TestStock.VALID_ART_NR_1, expectedAfterArticlesListS1, 3);
+		this.populateArticleList(TestStock.VALID_ART_NR_2, expectedAfterArticlesListS1, 1);
+	
 		when(s1.getArticles()).thenReturn(expectedBeforeArticlesListS1);
 		when(s2.pickAll()).thenReturn(expectedBeforeArticlesListS2);
 
@@ -256,22 +247,16 @@ public class TestStock {
 		LinkedList<Article> expectedAfterArticlesListS1 = new LinkedList<Article>();
 		LinkedList<Article> expectedAfterArticlesListS2 = new LinkedList<Article>();
 
-		expectedBeforeArticlesListS1.add(this
-				.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedBeforeArticlesListS1.add(this
-				.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedBeforeArticlesListS2.add(this
-				.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedBeforeArticlesListS2.add(this
-				.generateArticle(TestStock.VALID_ART_NR_2));
-		expectedAfterArticlesListS1.add(this
-				.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedAfterArticlesListS1.add(this
-				.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedAfterArticlesListS1.add(this
-				.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedAfterArticlesListS2.add(this
-				.generateArticle(TestStock.VALID_ART_NR_2));
+		this.populateArticleList(TestStock.VALID_ART_NR_1,
+				expectedBeforeArticlesListS1, 2);
+		this.populateArticleList(TestStock.VALID_ART_NR_1,
+				expectedBeforeArticlesListS2, 1);
+		this.populateArticleList(TestStock.VALID_ART_NR_2,
+				expectedBeforeArticlesListS2, 1);
+		this.populateArticleList(TestStock.VALID_ART_NR_1,
+				expectedAfterArticlesListS1, 3);
+		this.populateArticleList(TestStock.VALID_ART_NR_2,
+				expectedAfterArticlesListS2, 1);
 
 		when(s1.getArticles()).thenReturn(expectedBeforeArticlesListS1)
 				.thenReturn(expectedAfterArticlesListS1);
@@ -305,32 +290,34 @@ public class TestStock {
 		StorageLocation s2 = this
 				.generateStorageLocation(TestStock.VALID_STORAGE_NAME_2);
 
-		LinkedList<Article> expectedBeforeArticlesListS1 = new LinkedList<Article>();
-		LinkedList<Article> expectedBeforeArticlesListS2 = new LinkedList<Article>();
-
-		expectedBeforeArticlesListS1.add(this
-				.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedBeforeArticlesListS1.add(this
-				.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedBeforeArticlesListS2.add(this
-				.generateArticle(TestStock.VALID_ART_NR_1));
-
-		when(s1.getArticles(TestStock.VALID_ART_NR_1)).thenReturn(expectedBeforeArticlesListS1);
-		when(s2.getArticles(TestStock.VALID_ART_NR_1)).thenReturn(expectedBeforeArticlesListS2);
+		LinkedList<Article> articleListS1 = new LinkedList<Article>();
+		LinkedList<Article> articleListS2 = new LinkedList<Article>();
+		this.populateArticleList(TestStock.VALID_ART_NR_1, articleListS1, 3);
+		this.populateArticleList(TestStock.VALID_ART_NR_1, articleListS2, 1);
+		
+		when(s1.getArticles(TestStock.VALID_ART_NR_1)).thenReturn(articleListS1);
+		when(s2.getArticles(TestStock.VALID_ART_NR_1)).thenReturn(articleListS2);
 		
 		this.sut.addStorageLocation(s1);
 		this.sut.addStorageLocation(s2);
-		LinkedList<Article> output = this.sut.findArticles(TestStock.VALID_ART_NR_2);
-		
+		LinkedList<Article> output = this.sut
+				.findArticles(TestStock.VALID_ART_NR_2);
+
 		verify(s1).getArticles(TestStock.VALID_ART_NR_2);
-		verify(s2).getArticles(TestStock.VALID_ART_NR_2);		
-		
-		assertEquals(0, output.size());		
+		verify(s2).getArticles(TestStock.VALID_ART_NR_2);
+
+		assertEquals(0, output.size());
 	}
 
 	/*
 	 * Helper methods
 	 */
+	private void populateArticleList(String name, LinkedList<Article> articles,
+			int count) {
+		for (int i = 0; i < count; i++)
+			articles.add(this.generateArticle(name));
+	}
+
 	private LinkedList<StorageLocation> generateStorageLocations(int count,
 			String name) {
 		LinkedList<StorageLocation> locs = new LinkedList<StorageLocation>();
@@ -370,3 +357,4 @@ public class TestStock {
 	}
 
 }
+
