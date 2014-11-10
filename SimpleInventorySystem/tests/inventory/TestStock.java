@@ -103,7 +103,7 @@ public class TestStock {
 	}
 
 	@Test
-	public void shouldNotAddDuplicatedStorageLocations() {
+	public void shouldNotAddManyDuplicatedStorageLocations() {
 		LinkedList<StorageLocation> firstLocations = this
 				.generateStorageLocations(2);
 		this.sut.addStorageLocations(firstLocations);
@@ -112,8 +112,20 @@ public class TestStock {
 		secondLocations.add(firstLocations.get(0));
 
 		this.sut.addStorageLocations(secondLocations);
-		assertEquals(2, this.sut
-				.getStorageLocations().size());
+		assertEquals(2, this.sut.getStorageLocations().size());
+	}
+
+	@Test
+	public void shouldIgnoreDuplicationsWhenAddingMany() {
+		LinkedList<StorageLocation> firstLocations = this
+				.generateStorageLocations(Stock.MAX_STORAGE_LOCATIONS);
+		this.sut.addStorageLocations(firstLocations);
+
+		LinkedList<StorageLocation> secondLocations = new LinkedList<StorageLocation>();
+		secondLocations.add(firstLocations.get(0));
+
+		this.sut.addStorageLocations(secondLocations);
+		assertEquals(3, this.sut.getStorageLocations().size());
 	}
 
 	private LinkedList<StorageLocation> generateStorageLocations(int count) {
