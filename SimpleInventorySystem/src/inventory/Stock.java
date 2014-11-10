@@ -177,4 +177,10 @@ public class Stock {
 		s1.getArticles().addAll(s2.pickAll());
 	}
 
+	public void moveAllArticles(StorageLocation s1, StorageLocation s2,
+			String validArtNr1) {
+		s1.getArticles().addAll(s2.pickAll(validArtNr1));
+		
+	}
+
 }
