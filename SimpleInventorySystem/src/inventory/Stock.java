@@ -43,6 +43,9 @@ public class Stock {
 		if(null == locs)
 			throw new IllegalArgumentException();
 		
+		if(locs.size() + this.storageLocations.size() > 3)
+			throw new TooManyStorageLocationsException();
+		
 		this.storageLocations.addAll(locs);
 	}
 
