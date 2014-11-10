@@ -1,10 +1,11 @@
 package inventory;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
-
 public class TestStock {
 
 	private Stock sut;
@@ -18,6 +19,9 @@ public class TestStock {
 		this.sut = new Stock();
 	}
 
+	/*
+	 * Temperature
+	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowErrorOnABitTooCold() {
 		this.sut.setTemperature(TestStock.JUST_BELOW_LOW);
@@ -38,6 +42,30 @@ public class TestStock {
 	public void shouldSetTemparatureWhenJustColdEnough() {
 		this.sut.setTemperature(TestStock.JUST_BELOW_HIGH);
 		assertEquals(TestStock.JUST_BELOW_HIGH, this.sut.getTemperature());
+	}
+	
+	/*
+	 * Storage locations
+	 */
+	@Test
+	public void shouldReturnNoStorageLocations()
+	{
+		List<StorageLocation> locs = this.sut.getStorageLocations();
+		assertEquals(0, locs.size());
+	}
+
+	@Test
+	public void shouldAddStorageLocation()
+	{
+		StorageLocation loc = mock(StorageLocation.class);
+		this.sut.addStorageLocation(loc);
+		assertEquals(1, this.sut.getStorageLocations().size());
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowWhenAddingOneNullStorageLocation()
+	{
+		this.sut.addStorageLocation(null);
 	}
 
 }
