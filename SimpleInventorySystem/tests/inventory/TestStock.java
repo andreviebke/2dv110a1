@@ -15,13 +15,12 @@ public class TestStock {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowErrorOnABitTooCold() {
-
-		
+		this.sut.setTemperature(19.9);		
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowErrorOnABitTooWarm() {
-		
+		this.sut.setTemperature(30.1);	
 	}
 
 }
