@@ -55,27 +55,19 @@ public class TestStock {
 	/*
 	 * Storage locations
 	 */
+	// Get
 	@Test
 	public void shouldReturnNoStorageLocations() {
 		List<StorageLocation> locs = this.sut.getStorageLocations();
 		assertEquals(0, locs.size());
 	}
 
+	// Add one storage location
 	@Test
 	public void shouldAddStorageLocation() {
 		StorageLocation loc = mock(StorageLocation.class);
 		this.sut.addStorageLocation(loc);
 		assertEquals(1, this.sut.getStorageLocations().size());
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowWhenAddingOneNullStorageLocation() {
-		this.sut.addStorageLocation(null);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowWhenAddingManyNullStorageLocation() {
-		this.sut.addStorageLocations(null);
 	}
 
 	@Test
@@ -85,13 +77,24 @@ public class TestStock {
 		this.sut.addStorageLocation(loc);
 		assertEquals(1, this.sut.getStorageLocations().size());
 	}
-
+	
 	@Test(expected = TooManyStorageLocationsException.class)
 	public void shouldThrowOnAddingTooManyStorageLocations() {
 		LinkedList<StorageLocation> locs = this
 				.generateStorageLocations(Stock.MAX_STORAGE_LOCATIONS +1);
 		for (int i = 0; i < locs.size(); i++)
 			this.sut.addStorageLocation(locs.get(i));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowWhenAddingOneNullStorageLocation() {
+		this.sut.addStorageLocation(null);
+	}
+	
+	// Add many storage locations
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowWhenAddingManyNullStorageLocation() {
+		this.sut.addStorageLocations(null);
 	}
 
 	@Test
@@ -119,19 +122,6 @@ public class TestStock {
 	}
 
 	@Test
-	public void shouldNotAddManyDuplicatedStorageLocations() {
-		LinkedList<StorageLocation> firstLocations = this
-				.generateStorageLocations(2);
-		this.sut.addStorageLocations(firstLocations);
-
-		LinkedList<StorageLocation> secondLocations = new LinkedList<StorageLocation>();
-		secondLocations.add(firstLocations.get(0));
-
-		this.sut.addStorageLocations(secondLocations);
-		assertEquals(2, this.sut.getStorageLocations().size());
-	}
-
-	@Test
 	public void shouldIgnoreDuplicationsWhenAddingMany() {
 		LinkedList<StorageLocation> firstLocations = this
 				.generateStorageLocations(Stock.MAX_STORAGE_LOCATIONS);
@@ -142,6 +132,17 @@ public class TestStock {
 
 		this.sut.addStorageLocations(secondLocations);
 		assertEquals(3, this.sut.getStorageLocations().size());
+	}
+	
+	@Test
+	public void shouldIngoreAddingDuplicatesInInputSetWhenAddingMany()
+	{
+		LinkedList<StorageLocation> locations = this
+				.generateStorageLocations(Stock.MAX_STORAGE_LOCATIONS);
+		locations.addAll(locations);
+		this.sut.addStorageLocations(locations);
+		
+		assertEquals(5, this.sut.getStorageLocations().size());
 	}
 
 	private LinkedList<StorageLocation> generateStorageLocations(int count) {
