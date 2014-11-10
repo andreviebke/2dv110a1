@@ -208,14 +208,22 @@ public class TestStock {
 		LinkedList<Article> expectedAfterArticlesListS1 = new LinkedList<Article>();
 		LinkedList<Article> expectedAfterArticlesListS2 = new LinkedList<Article>();
 
-		expectedBeforeArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedBeforeArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedBeforeArticlesListS2.add(this.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedBeforeArticlesListS2.add(this.generateArticle(TestStock.VALID_ART_NR_2));
-		expectedAfterArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedAfterArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedAfterArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedAfterArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_2));
+		expectedBeforeArticlesListS1.add(this
+				.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedBeforeArticlesListS1.add(this
+				.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedBeforeArticlesListS2.add(this
+				.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedBeforeArticlesListS2.add(this
+				.generateArticle(TestStock.VALID_ART_NR_2));
+		expectedAfterArticlesListS1.add(this
+				.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedAfterArticlesListS1.add(this
+				.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedAfterArticlesListS1.add(this
+				.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedAfterArticlesListS1.add(this
+				.generateArticle(TestStock.VALID_ART_NR_2));
 
 		when(s1.getArticles()).thenReturn(expectedBeforeArticlesListS1);
 		when(s2.pickAll()).thenReturn(expectedBeforeArticlesListS2);
@@ -248,14 +256,22 @@ public class TestStock {
 		LinkedList<Article> expectedAfterArticlesListS1 = new LinkedList<Article>();
 		LinkedList<Article> expectedAfterArticlesListS2 = new LinkedList<Article>();
 
-		expectedBeforeArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedBeforeArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedBeforeArticlesListS2.add(this.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedBeforeArticlesListS2.add(this.generateArticle(TestStock.VALID_ART_NR_2));
-		expectedAfterArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedAfterArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedAfterArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
-		expectedAfterArticlesListS2.add(this.generateArticle(TestStock.VALID_ART_NR_2));
+		expectedBeforeArticlesListS1.add(this
+				.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedBeforeArticlesListS1.add(this
+				.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedBeforeArticlesListS2.add(this
+				.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedBeforeArticlesListS2.add(this
+				.generateArticle(TestStock.VALID_ART_NR_2));
+		expectedAfterArticlesListS1.add(this
+				.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedAfterArticlesListS1.add(this
+				.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedAfterArticlesListS1.add(this
+				.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedAfterArticlesListS2.add(this
+				.generateArticle(TestStock.VALID_ART_NR_2));
 
 		when(s1.getArticles()).thenReturn(expectedBeforeArticlesListS1)
 				.thenReturn(expectedAfterArticlesListS1);
@@ -277,6 +293,39 @@ public class TestStock {
 				afterArticlesInS1.size());
 		assertEquals(expectedAfterArticlesListS2.size(),
 				afterArticlesInS2.size());
+	}
+
+	/*
+	 * Search articles
+	 */
+	@Test
+	public void shouldNotFindAnyArticles() {
+		StorageLocation s1 = this
+				.generateStorageLocation(TestStock.VALID_STORAGE_NAME);
+		StorageLocation s2 = this
+				.generateStorageLocation(TestStock.VALID_STORAGE_NAME_2);
+
+		LinkedList<Article> expectedBeforeArticlesListS1 = new LinkedList<Article>();
+		LinkedList<Article> expectedBeforeArticlesListS2 = new LinkedList<Article>();
+
+		expectedBeforeArticlesListS1.add(this
+				.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedBeforeArticlesListS1.add(this
+				.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedBeforeArticlesListS2.add(this
+				.generateArticle(TestStock.VALID_ART_NR_1));
+
+		when(s1.getArticles(TestStock.VALID_ART_NR_1)).thenReturn(expectedBeforeArticlesListS1);
+		when(s2.getArticles(TestStock.VALID_ART_NR_1)).thenReturn(expectedBeforeArticlesListS2);
+		
+		this.sut.addStorageLocation(s1);
+		this.sut.addStorageLocation(s2);
+		LinkedList<Article> output = this.sut.findArticles(TestStock.VALID_ART_NR_2);
+		
+		verify(s1).getArticles(TestStock.VALID_ART_NR_2);
+		verify(s2).getArticles(TestStock.VALID_ART_NR_2);		
+		
+		assertEquals(0, output.size());		
 	}
 
 	/*
