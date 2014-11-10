@@ -79,6 +79,22 @@ public class TestStock {
 	}
 
 	@Test
+	public void shouldNotAddDuplicatedStorageLocation() {
+		StorageLocation loc = mock(StorageLocation.class);
+		this.sut.addStorageLocation(loc);
+		this.sut.addStorageLocation(loc);
+		assertEquals(1, this.sut.getStorageLocations().size());
+	}
+
+	@Test(expected = TooManyStorageLocationsException.class)
+	public void shouldThrowOnAddingTooManyStorageLocations() {
+		LinkedList<StorageLocation> locs = this
+				.generateStorageLocations(Stock.MAX_STORAGE_LOCATIONS +1);
+		for (int i = 0; i < locs.size(); i++)
+			this.sut.addStorageLocation(locs.get(i));
+	}
+
+	@Test
 	public void shouldAddManyStorageLocations() {
 		LinkedList<StorageLocation> locs = generateStorageLocations(Stock.MAX_STORAGE_LOCATIONS);
 		this.sut.addStorageLocations(locs);
