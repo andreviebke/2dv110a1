@@ -3,6 +3,7 @@ package inventory;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Before;
@@ -72,6 +73,23 @@ public class TestStock {
 	public void shouldThrowWhenAddingOneNullStorageLocation()
 	{
 		this.sut.addStorageLocation(null);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowWhenAddingManyNullStorageLocation()
+	{	
+		this.sut.addStorageLocations(null);
+	}
+	
+	@Test
+	public void shouldAddManyStorageLocations()
+	{
+		LinkedList<StorageLocation> locs = new LinkedList<StorageLocation>();
+		locs.add(mock(StorageLocation.class));
+		locs.add(mock(StorageLocation.class));
+		locs.add(mock(StorageLocation.class));	
+		
+		this.sut.addStorageLocations(locs);
 	}
 
 }
