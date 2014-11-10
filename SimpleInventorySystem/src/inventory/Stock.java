@@ -151,25 +151,22 @@ public class Stock {
 			throw new TooManyStorageLocationsException();
 	}
 
+	/**
+	 * Get storage location by name
+	 * @param storage name
+	 * @return all storage locations with name
+	 */
 	public LinkedList<StorageLocation> getStorageLocationsByName(
-			String validStorageName) {
+			String storageName) {
 		
 		LinkedList<StorageLocation> toReturn = new LinkedList<StorageLocation>();
 		
 		for(StorageLocation loc : this.storageLocations)
 		{
 			String name = loc.getName();
-			if(name.equals("SomeName"))
+			if(name.equalsIgnoreCase(storageName))
 			{
 				toReturn.add(loc);
-			}
-			else if(name.toUpperCase().equals("SomeName".toUpperCase()))
-			{
-				
-			}
-			else if(name.toLowerCase().equals("SomeName".toLowerCase()))
-			{
-				
 			}
 		}
 		
