@@ -36,7 +36,19 @@ public class Stock {
 		if (null == loc)
 			throw new IllegalArgumentException();
 
-		this.storageLocations.add(loc);
+		if (this.removeDuplications(new LinkedList<StorageLocation>() {
+			{
+				add(loc);
+			}
+		}).size() == 1) {
+			
+			if(this.storageLocations.size() +1 > Stock.MAX_STORAGE_LOCATIONS)
+				throw new TooManyStorageLocationsException();
+			
+			this.storageLocations.add(loc);
+		}
+
+
 	}
 
 	public void addStorageLocations(List<StorageLocation> locs) {
@@ -44,10 +56,10 @@ public class Stock {
 			throw new IllegalArgumentException();
 
 		LinkedList<StorageLocation> toInsert = removeDuplications(locs);
-		
+
 		if (toInsert.size() + this.storageLocations.size() > Stock.MAX_STORAGE_LOCATIONS)
 			throw new TooManyStorageLocationsException();
-		
+
 		this.storageLocations.addAll(toInsert);
 
 	}
