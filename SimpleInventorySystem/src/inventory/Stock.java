@@ -13,6 +13,7 @@ public class Stock {
 	public Stock()
 	{
 		this.storageLocations = new LinkedList<StorageLocation>();
+		this.temperature = Double.MIN_VALUE;
 	}
 	
 	public void setTemperature(double d) {
