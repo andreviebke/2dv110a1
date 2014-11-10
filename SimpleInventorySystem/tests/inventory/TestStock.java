@@ -16,7 +16,6 @@ public class TestStock {
 	private static double JUST_ABOVE_HIGH = Stock.MAX_TEMP + 0.1;
 	private static double JUST_BELOW_HIGH = Stock.MAX_TEMP - 0.1;
 	private static double JUST_ABOVE_LOW = Stock.MIN_TEMP + 0.1;
-
 	@Before
 	public void setUp() throws Exception {
 		this.sut = new Stock();
@@ -80,20 +79,19 @@ public class TestStock {
 
 	@Test
 	public void shouldAddManyStorageLocations() {
-		LinkedList<StorageLocation> locs = generateStorageLocations();
+		LinkedList<StorageLocation> locs = generateStorageLocations(Stock.MAX_STORAGE_LOCATIONS);
 		this.sut.addStorageLocations(locs);
 	}
 
 	@Test(expected = TooManyStorageLocationsException.class)
 	public void shouldThrowWhenAddingTooManyStorageLocationsAtOnce() {
-		LinkedList<StorageLocation> locs = generateStorageLocations();
-		locs.add(mock(StorageLocation.class));
+		LinkedList<StorageLocation> locs = generateStorageLocations(Stock.MAX_STORAGE_LOCATIONS +1);
 		this.sut.addStorageLocations(locs);
 	}
 
 	@Test(expected = TooManyStorageLocationsException.class)
 	public void shouldThrowWhenAddingTooManyStorageLocationsAlreadyExisting() {
-		LinkedList<StorageLocation> locs = this.generateStorageLocations();
+		LinkedList<StorageLocation> locs = this.generateStorageLocations(Stock.MAX_STORAGE_LOCATIONS);
 		this.sut.addStorageLocations(locs);
 		
 		locs = new LinkedList<StorageLocation>();
@@ -102,11 +100,12 @@ public class TestStock {
 		this.sut.addStorageLocations(locs);
 	}
 
-	private LinkedList<StorageLocation> generateStorageLocations() {
+	private LinkedList<StorageLocation> generateStorageLocations(int count) {
 		LinkedList<StorageLocation> locs = new LinkedList<StorageLocation>();
-		locs.add(mock(StorageLocation.class));
-		locs.add(mock(StorageLocation.class));
-		locs.add(mock(StorageLocation.class));
+		
+		for(int i=0; i< count; i++)
+			locs.add(mock(StorageLocation.class));	
+		
 		return locs;
 	}
 
