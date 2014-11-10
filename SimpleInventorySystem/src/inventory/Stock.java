@@ -173,4 +173,8 @@ public class Stock {
 		return toReturn;
 	}
 
+	public void moveAllArticles(StorageLocation s1, StorageLocation s2) {
+		s1.getArticles().addAll(s2.pickAll());
+	}
+
 }
