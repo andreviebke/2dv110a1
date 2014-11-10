@@ -236,6 +236,48 @@ public class TestStock {
 				afterArticlesInS2.size());
 	}
 
+	@Test
+	public void shouldMoveArtilcesMatchingArtilceIdFromOneLocationToAnother() {
+		StorageLocation s1 = this
+				.generateStorageLocation(TestStock.VALID_STORAGE_NAME);
+		StorageLocation s2 = this
+				.generateStorageLocation(TestStock.VALID_STORAGE_NAME_2);
+
+		LinkedList<Article> expectedBeforeArticlesListS1 = new LinkedList<Article>();
+		LinkedList<Article> expectedBeforeArticlesListS2 = new LinkedList<Article>();
+		LinkedList<Article> expectedAfterArticlesListS1 = new LinkedList<Article>();
+		LinkedList<Article> expectedAfterArticlesListS2 = new LinkedList<Article>();
+
+		expectedBeforeArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedBeforeArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedBeforeArticlesListS2.add(this.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedBeforeArticlesListS2.add(this.generateArticle(TestStock.VALID_ART_NR_2));
+		expectedAfterArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedAfterArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedAfterArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedAfterArticlesListS2.add(this.generateArticle(TestStock.VALID_ART_NR_2));
+
+		when(s1.getArticles()).thenReturn(expectedBeforeArticlesListS1)
+				.thenReturn(expectedAfterArticlesListS1);
+		when(s2.pickAll(TestStock.VALID_ART_NR_1)).thenReturn(
+				expectedBeforeArticlesListS2);
+		when(s2.getArticles()).thenReturn(expectedAfterArticlesListS2);
+
+		this.sut.moveAllArticles(s1, s2, TestStock.VALID_ART_NR_1);
+
+		verify(s1).getArticles();
+		verify(s2).pickAll(TestStock.VALID_ART_NR_1);
+
+		LinkedList<Article> afterArticlesInS1 = (LinkedList<Article>) s1
+				.getArticles();
+		LinkedList<Article> afterArticlesInS2 = (LinkedList<Article>) s2
+				.getArticles();
+
+		assertEquals(expectedAfterArticlesListS1.size(),
+				afterArticlesInS1.size());
+		assertEquals(expectedAfterArticlesListS2.size(),
+				afterArticlesInS2.size());
+	}
 
 	/*
 	 * Helper methods
