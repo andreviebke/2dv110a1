@@ -39,11 +39,11 @@ public class Stock {
 		this.storageLocations.add(loc);
 	}
 
-	public void addStorageLocations(Object object) {
-		if(null == object)
+	public void addStorageLocations(List<StorageLocation> locs) {
+		if(null == locs)
 			throw new IllegalArgumentException();
 		
-		this.storageLocations.addAll((Collection<? extends StorageLocation>) object);
+		this.storageLocations.addAll(locs);
 	}
 
 }

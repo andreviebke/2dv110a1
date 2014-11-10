@@ -84,12 +84,16 @@ public class TestStock {
 	@Test
 	public void shouldAddManyStorageLocations()
 	{
+		LinkedList<StorageLocation> locs = generateStorageLocations();			
+		this.sut.addStorageLocations(locs);
+	}
+
+	private LinkedList<StorageLocation> generateStorageLocations() {
 		LinkedList<StorageLocation> locs = new LinkedList<StorageLocation>();
 		locs.add(mock(StorageLocation.class));
 		locs.add(mock(StorageLocation.class));
-		locs.add(mock(StorageLocation.class));	
-		
-		this.sut.addStorageLocations(locs);
+		locs.add(mock(StorageLocation.class));
+		return locs;
 	}
 
 }
