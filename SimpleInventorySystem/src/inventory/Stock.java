@@ -1,5 +1,6 @@
 package inventory;
 
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -74,10 +75,13 @@ public class Stock {
 		if (null == locs)
 			throw new IllegalArgumentException();
 
-		LinkedList<StorageLocation> toInsert = removeDuplications(locs);
+		LinkedList<StorageLocation> noInternalDuplicates = this.removeInternalDuplications(
+				locs);
+		LinkedList<StorageLocation> toInsert = this.removeExternalDuplications(
+				noInternalDuplicates, this.storageLocations);
 
 		this.checkStorageCount(toInsert.size());
-		
+
 		this.storageLocations.addAll(toInsert);
 
 	}
@@ -106,32 +110,42 @@ public class Stock {
 	 *            - storage locations
 	 * @return a list with non duplicated storage locations
 	 */
-	private LinkedList<StorageLocation> removeDuplications(
-			List<StorageLocation> locs) {
-		LinkedList<StorageLocation> toInsert = new LinkedList<StorageLocation>();
+	private LinkedList<StorageLocation> removeInternalDuplications(
+			List<StorageLocation> toInsert) {
+
+		LinkedList<StorageLocation> toReturn = new LinkedList<StorageLocation>(new LinkedHashSet<StorageLocation>(toInsert));
+
+		return toReturn;
+	}
+	
+	private LinkedList<StorageLocation> removeExternalDuplications(
+			List<StorageLocation> toInsert, List<StorageLocation> toCheckAgainst) {
+		LinkedList<StorageLocation> toReturn = new LinkedList<StorageLocation>();
 
 		boolean exists;
-		for (StorageLocation insertLoc : locs) {
+		for (int i = 0; i < toInsert.size(); i++) {
 			exists = false;
 
-			for (StorageLocation currentLoc : this.storageLocations) {
-				if (currentLoc == insertLoc) {
+			for (int j = 0; j < toCheckAgainst.size(); j++) {
+				if (toInsert.get(i) == toCheckAgainst.get(j)) {
 					exists = true;
 					break;
 				}
 			}
 
 			if (!exists) {
-				toInsert.add(insertLoc);
+				toReturn.add(toInsert.get(i));
 			}
 		}
 
-		return toInsert;
+		return toReturn;
 	}
-
+	
 	/**
 	 * Checks the storage count including numbersTOAdd
-	 * @param numbersToAdd - the number of storage locations to add
+	 * 
+	 * @param numbersToAdd
+	 *            - the number of storage locations to add
 	 */
 	private void checkStorageCount(int numbersToAdd) {
 		if (this.storageLocations.size() + numbersToAdd > Stock.MAX_STORAGE_LOCATIONS)

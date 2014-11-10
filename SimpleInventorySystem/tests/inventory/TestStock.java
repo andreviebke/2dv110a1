@@ -2,6 +2,8 @@ package inventory;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.when;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -135,21 +137,24 @@ public class TestStock {
 	}
 	
 	@Test
-	public void shouldIngoreAddingDuplicatesInInputSetWhenAddingMany()
+	public void shouldIgnoreAddingDuplicatesInInputSetWhenAddingMany()
 	{
 		LinkedList<StorageLocation> locations = this
 				.generateStorageLocations(Stock.MAX_STORAGE_LOCATIONS);
 		locations.addAll(locations);
 		this.sut.addStorageLocations(locations);
 		
-		assertEquals(5, this.sut.getStorageLocations().size());
+		assertEquals(3, this.sut.getStorageLocations().size());
 	}
 
 	private LinkedList<StorageLocation> generateStorageLocations(int count) {
 		LinkedList<StorageLocation> locs = new LinkedList<StorageLocation>();
 
 		for (int i = 0; i < count; i++)
-			locs.add(mock(StorageLocation.class));
+		{
+			StorageLocation mock = mock(StorageLocation.class);			
+			locs.add(mock);
+		}
 
 		return locs;
 	}
