@@ -2,15 +2,15 @@ package inventory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 public class TestStock {
 
@@ -21,10 +21,13 @@ public class TestStock {
 	private static double JUST_ABOVE_LOW = Stock.MIN_TEMP + 0.1;
 	private static final String VALID_STORAGE_NAME = "SomeName";
 	private static final String VALID_STORAGE_NAME_2 = "SomeOtherName";
+	private static final String VALID_ART_NR_1 = "1";
+	private static final String VALID_ART_NR_2 = "2";
 
 	@Before
 	public void setUp() throws Exception {
 		this.sut = new Stock();
+		MockitoAnnotations.initMocks(this);
 	}
 
 	/*
@@ -81,7 +84,7 @@ public class TestStock {
 		verifyInvokeGetName(locs);
 		assertEquals(Stock.MAX_STORAGE_LOCATIONS - 1, output.size());
 	}
-	
+
 	// Add one storage location
 	@Test
 	public void shouldAddStorageLocation() {
@@ -191,6 +194,50 @@ public class TestStock {
 	}
 
 	/*
+	 * Move between storage locations
+	 */
+	@Test
+	public void shouldMoveAllArticlesFromOneStorageLocationToAnother() {
+		StorageLocation s1 = this
+				.generateStorageLocation(TestStock.VALID_STORAGE_NAME);
+		StorageLocation s2 = this
+				.generateStorageLocation(TestStock.VALID_STORAGE_NAME_2);
+
+		LinkedList<Article> expectedBeforeArticlesListS1 = new LinkedList<Article>();
+		LinkedList<Article> expectedBeforeArticlesListS2 = new LinkedList<Article>();
+		LinkedList<Article> expectedAfterArticlesListS1 = new LinkedList<Article>();
+		LinkedList<Article> expectedAfterArticlesListS2 = new LinkedList<Article>();
+
+		expectedBeforeArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedBeforeArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedBeforeArticlesListS2.add(this.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedBeforeArticlesListS2.add(this.generateArticle(TestStock.VALID_ART_NR_2));
+		expectedAfterArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedAfterArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedAfterArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_1));
+		expectedAfterArticlesListS1.add(this.generateArticle(TestStock.VALID_ART_NR_2));
+
+		when(s1.getArticles()).thenReturn(expectedBeforeArticlesListS1);
+		when(s2.pickAll()).thenReturn(expectedBeforeArticlesListS2);
+
+		this.sut.moveAllArticles(s1, s2);
+
+		verify(s1).getArticles();
+		verify(s2).pickAll();
+
+		LinkedList<Article> afterArticlesInS1 = (LinkedList<Article>) s1
+				.getArticles();
+		LinkedList<Article> afterArticlesInS2 = (LinkedList<Article>) s2
+				.getArticles();
+
+		assertEquals(expectedAfterArticlesListS1.size(),
+				afterArticlesInS1.size());
+		assertEquals(expectedAfterArticlesListS2.size(),
+				afterArticlesInS2.size());
+	}
+
+
+	/*
 	 * Helper methods
 	 */
 	private LinkedList<StorageLocation> generateStorageLocations(int count,
@@ -223,6 +270,12 @@ public class TestStock {
 		for (int i = 0; i < Stock.MAX_STORAGE_LOCATIONS - 1; i++) {
 			verify(locs.get(i)).getName();
 		}
+	}
+
+	private Article generateArticle(String name) {
+		Article mock = mock(Article.class);
+		when(mock.getArtNr()).thenReturn(name);
+		return mock;
 	}
 
 }
