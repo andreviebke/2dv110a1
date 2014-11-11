@@ -61,7 +61,7 @@ public class Stock {
 		if (null == loc)
 			throw new IllegalArgumentException();
 
-		if (!this.duplicationExists(loc)) {
+		if (!(this.duplicationExists(loc))) {
 			checkStorageCount(1);
 
 			this.storageLocations.add(loc);
@@ -90,70 +90,6 @@ public class Stock {
 
 	}
 
-	/**
-	 * Returns true if duplication exists, false otherwise
-	 * 
-	 * @param loc
-	 *            - location
-	 * @return true if duplication exists, false otherwise
-	 */
-	private boolean duplicationExists(StorageLocation loc) {
-		boolean exists = false;
-
-		for (StorageLocation s : this.storageLocations)
-			if (loc == s)
-				exists = true;
-
-		return exists;
-	}
-
-	/**
-	 * Returns a list with non duplicated storage locations
-	 * 
-	 * @param locs
-	 *            - storage locations
-	 * @return a list with non duplicated storage locations
-	 */
-	private LinkedList<StorageLocation> removeInternalDuplications(
-			List<StorageLocation> toInsert) {
-
-		LinkedList<StorageLocation> toReturn = new LinkedList<StorageLocation>(
-				new LinkedHashSet<StorageLocation>(toInsert));
-
-		return toReturn;
-	}
-
-	/**
-	 * Removes external duplications, i.e. duplicated storage locations to be
-	 * inserted
-	 * 
-	 * @param newLocations
-	 *            - locations to insert
-	 * @param existingLocations
-	 *            - existing locations at stock
-	 * @return List without duplications
-	 */
-	private LinkedList<StorageLocation> removeExternalDuplications(
-			List<StorageLocation> newLocations,
-			List<StorageLocation> existingLocations) {
-		LinkedList<StorageLocation> toReturn = new LinkedList<StorageLocation>(
-				newLocations);
-
-		toReturn.removeAll(existingLocations);
-
-		return toReturn;
-	}
-
-	/**
-	 * Checks the storage count including numbersTOAdd
-	 * 
-	 * @param numbersToAdd
-	 *            - the number of storage locations to add
-	 */
-	private void checkStorageCount(int numbersToAdd) {
-		if (this.storageLocations.size() + numbersToAdd > Stock.MAX_STORAGE_LOCATIONS)
-			throw new TooManyStorageLocationsException();
-	}
 
 	/**
 	 * Get storage location by name
@@ -167,9 +103,9 @@ public class Stock {
 
 		LinkedList<StorageLocation> toReturn = new LinkedList<StorageLocation>();
 
-		for (StorageLocation loc : this.storageLocations) 	
+		for (StorageLocation loc : this.storageLocations)
 			if (loc.getName().equalsIgnoreCase(storageName))
-				toReturn.add(loc);		
+				toReturn.add(loc);
 
 		return toReturn;
 	}
@@ -182,16 +118,20 @@ public class Stock {
 	 * @param s2
 	 *            - from location
 	 */
-	public void moveAllArticles(StorageLocation s1, StorageLocation s2) {
-		if(null == s1 || null == s2)
+	public boolean moveAllArticles(StorageLocation s1, StorageLocation s2) {
+		if (null == s1 || null == s2)
 			throw new IllegalArgumentException();
-		
+
 		LinkedList<Article> allArticles = new LinkedList<Article>();
 		allArticles.addAll(s1.getArticles());
 		allArticles.addAll(s2.getArticles());
 
-		if (this.checkCount(allArticles) && this.checkWidth(allArticles))
+		if (this.checkCount(allArticles) && this.checkWidth(allArticles)){
 			s1.insertMany(s2.pickAll());
+			return true;
+		}
+		
+		return false;
 	}
 
 	/**
@@ -204,13 +144,17 @@ public class Stock {
 	 * @param validArtNr1
 	 */
 	public void moveAllArticles(StorageLocation s1, StorageLocation s2,
-			String validArtNr1) {
+			String artNr) {
+		
+		if(null == s1 || null == s2 || null == artNr)
+			throw new IllegalArgumentException();
+		
 		LinkedList<Article> allArticles = new LinkedList<Article>();
 		allArticles.addAll(s1.getArticles());
-		allArticles.addAll(s2.getArticles(validArtNr1));
+		allArticles.addAll(s2.getArticles(artNr));
 
 		if (this.checkCount(allArticles) && this.checkWidth(allArticles))
-			s1.insertMany(s2.pickAll(validArtNr1));
+			s1.insertMany(s2.pickAll(artNr));
 	}
 
 	/**
@@ -220,10 +164,10 @@ public class Stock {
 	 * @return all found articles
 	 */
 	public LinkedList<Article> findArticles(String id) {
-		
-		if(null == id)
+
+		if (null == id)
 			throw new IllegalArgumentException();
-		
+
 		LinkedList<Article> foundArticles = new LinkedList<Article>();
 
 		for (StorageLocation s : this.storageLocations)
@@ -241,17 +185,12 @@ public class Stock {
 	 *            - from location
 	 */
 	public void mergeStorageLocations(StorageLocation s1, StorageLocation s2) {
-		if(null == s1 || null == s2)
+		if (null == s1 || null == s2)
 			throw new IllegalArgumentException();
 
-		LinkedList<Article> allArticles = new LinkedList<Article>();
-		allArticles.addAll(s1.getArticles());
-		allArticles.addAll(s2.getArticles());
-
-		if (this.checkCount(allArticles) && this.checkWidth(allArticles)) {
-			this.moveAllArticles(s1, s2);
+		if (this.moveAllArticles(s1, s2))
 			this.storageLocations.remove(s2);
-		}
+
 	}
 
 	/**
@@ -288,4 +227,69 @@ public class Stock {
 		return true;
 	}
 
+
+	/**
+	 * Removes external duplications, i.e. duplicated storage locations to be
+	 * inserted
+	 * 
+	 * @param newLocations
+	 *            - locations to insert
+	 * @param existingLocations
+	 *            - existing locations at stock
+	 * @return List without duplications
+	 */
+	private LinkedList<StorageLocation> removeExternalDuplications(
+			List<StorageLocation> newLocations,
+			List<StorageLocation> existingLocations) {
+		LinkedList<StorageLocation> toReturn = new LinkedList<StorageLocation>(
+				newLocations);
+
+		toReturn.removeAll(existingLocations);
+
+		return toReturn;
+	}
+
+	/**
+	 * Checks the storage count including numbersTOAdd
+	 * 
+	 * @param numbersToAdd
+	 *            - the number of storage locations to add
+	 */
+	private void checkStorageCount(int numbersToAdd) {
+		if (this.storageLocations.size() + numbersToAdd > Stock.MAX_STORAGE_LOCATIONS)
+			throw new TooManyStorageLocationsException();
+	}
+	
+	/**
+	 * Returns true if duplication exists, false otherwise
+	 * 
+	 * @param loc
+	 *            - location
+	 * @return true if duplication exists, false otherwise
+	 */
+	private boolean duplicationExists(StorageLocation loc) {
+		boolean exists = false;
+
+		for (StorageLocation s : this.storageLocations)
+			if (loc == s)
+				exists = true;
+
+		return exists;
+	}
+
+	/**
+	 * Returns a list with non duplicated storage locations
+	 * 
+	 * @param locs
+	 *            - storage locations
+	 * @return a list with non duplicated storage locations
+	 */
+	private LinkedList<StorageLocation> removeInternalDuplications(
+			List<StorageLocation> toInsert) {
+
+		LinkedList<StorageLocation> toReturn = new LinkedList<StorageLocation>(
+				new LinkedHashSet<StorageLocation>(toInsert));
+
+		return toReturn;
+	}
 }
