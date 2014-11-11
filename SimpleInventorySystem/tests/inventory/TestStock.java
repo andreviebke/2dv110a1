@@ -388,6 +388,12 @@ public class TestStock {
 		this.verifyInvokeGetArticles(TestStock.VALID_ART_NR_2, input2);
 		assertEquals(0, output.size());
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnNullArticleNumberWhenSearching()
+	{
+		this.sut.findArticles(null);
+	}
 
 	/*
 	 * Merge storage locations
