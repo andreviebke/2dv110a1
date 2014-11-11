@@ -346,7 +346,11 @@ public class TestStock {
 				afterArticlesInS2.size());
 	}
 
-	// TODO: Exceptional cases for articles with id
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowExceptionOnNullStorageLocation() {
+		
+		this.sut.moveAllArticles(null, null);
+	}
 
 	/*
 	 * Search articles
