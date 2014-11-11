@@ -3,11 +3,11 @@ package inventory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.times;
-import static org.mockito.Matchers.*;
 import inventory.exceptions.TooManyStorageLocationsException;
 
 import java.util.HashMap;
@@ -40,7 +40,7 @@ public class TestStock {
 	/*
 	 * Temperature
 	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = InvalidTemperatureException.class)
 	public void shouldThrowErrorOnABitTooCold() {
 		this.sut.setTemperature(TestStock.JUST_BELOW_LOW);
 	}
