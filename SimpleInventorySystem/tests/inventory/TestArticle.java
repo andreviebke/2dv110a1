@@ -53,5 +53,38 @@ public class TestArticle {
 		assertEquals(art.getArtNr(), TestArticle.NO_ART_NR);
 	}
 	
-	//TODO: Test boundary values
+	@Test
+	public void shouldSetArtNr()
+	{
+		Article art = new Article();
+		art.setArtNr(TestArticle.VALID_ART_NR);
+	}
+	
+	@Test
+	public void shouldSetWidth()
+	{
+		Article art = new Article();
+		art.setWidth(TestArticle.VALID_WIDTH);
+	}
+	
+	@Test(expected = InvalidWidthException.class)
+	public void shoudlThrowOnTooLargeWidth()
+	{
+		Article art = new Article();
+		art.setWidth(TestArticle.TOO_LARGE_WIDTH);
+	}
+	
+	@Test(expected = InvalidNameException.class)
+	public void shouldThrowOnTooLongArtNr()
+	{
+		Article art = new Article();
+		art.setArtNr(TestArticle.TOO_LONG_ART_NR);
+	}
+	
+	@Test(expected = InvalidNameException.class)
+	public void shouldThrowOnNullArtNr()
+	{
+		Article art = new Article();
+		art.setArtNr(null);
+	}
 }
