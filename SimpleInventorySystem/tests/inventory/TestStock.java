@@ -227,7 +227,8 @@ public class TestStock {
 
 		this.sut.moveAllArticles(s1, s2);
 
-		verify(s1).getArticles();
+		verify(s1, times(2)).getArticles();
+		verify(s2).getArticles();
 		verify(s2).pickAll();
 
 		LinkedList<Article> afterArticlesInS1 = (LinkedList<Article>) s1
@@ -359,7 +360,7 @@ public class TestStock {
 
 		assertEquals(expectedAfterArticlesListS1.size(),
 				afterArticlesInS1.size());
-		assertEquals(expectedAfterArticlesListS1.size(),
+		assertEquals(expectedAfterArticlesListS2.size(),
 				afterArticlesInS2.size());
 	}
 
@@ -457,8 +458,8 @@ public class TestStock {
 		LinkedList<Article> afterArticlesInS2 = (LinkedList<Article>) s2
 				.getArticles();
 
-		assertEquals(expectedAfterArticlesListS1, afterArticlesInS1.size());
-		assertEquals(expectedAfterArticlesListS2, afterArticlesInS2.size());
+		assertEquals(expectedAfterArticlesListS1.size(), afterArticlesInS1.size());
+		assertEquals(expectedAfterArticlesListS2.size(), afterArticlesInS2.size());
 	}
 
 	/*

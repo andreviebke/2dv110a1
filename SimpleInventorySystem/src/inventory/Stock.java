@@ -174,7 +174,24 @@ public class Stock {
 	}
 
 	public void moveAllArticles(StorageLocation s1, StorageLocation s2) {
-		s1.getArticles().addAll(s2.pickAll());
+		LinkedList<Article> s1Articles = (LinkedList<Article>) s1.getArticles();
+		LinkedList<Article> s2Articles = (LinkedList<Article>) s2.getArticles();
+		
+		double totWidth = 0;		
+		for(Article a : s1Articles)
+		{
+			totWidth += a.getWidth();
+		}
+		for(Article a : s2Articles)
+		{
+			totWidth += a.getWidth();
+		}
+		
+		double totArticles = s1Articles.size() + s2Articles.size();		
+		if(totWidth <= StorageLocation.MAX_WIDTH && totArticles <= StorageLocation.MAX_ARTICLES)
+		{
+			s1.getArticles().addAll(s2.pickAll());
+		}
 	}
 
 	public void moveAllArticles(StorageLocation s1, StorageLocation s2,
