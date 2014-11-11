@@ -174,80 +174,109 @@ public class Stock {
 		return toReturn;
 	}
 
+	/**
+	 * Moves all articles from one storage location to another
+	 * 
+	 * @param s1
+	 *            - to location
+	 * @param s2
+	 *            - from location
+	 */
 	public void moveAllArticles(StorageLocation s1, StorageLocation s2) {
-		LinkedList<Article> s1Articles = (LinkedList<Article>) s1.getArticles();
-		LinkedList<Article> s2Articles = (LinkedList<Article>) s2.getArticles();
+		LinkedList<Article> allArticles = new LinkedList<Article>();
+		allArticles.addAll(s1.getArticles());
+		allArticles.addAll(s2.getArticles());
 
-		double totWidth = 0;
-		for (Article a : s1Articles) {
-			totWidth += a.getWidth();
-		}
-		for (Article a : s2Articles) {
-			totWidth += a.getWidth();
-		}
-
-		double totArticles = s1Articles.size() + s2Articles.size();
-		if (totWidth <= StorageLocation.MAX_WIDTH
-				&& totArticles <= StorageLocation.MAX_ARTICLES) {
+		if (this.checkCount(allArticles) && this.checkWidth(allArticles))
 			s1.getArticles().addAll(s2.pickAll());
-		}
 	}
 
+	/**
+	 * Moves all with article id from one storage location to another
+	 * 
+	 * @param s1
+	 *            - to location
+	 * @param s2
+	 *            - from location
+	 * @param validArtNr1
+	 */
 	public void moveAllArticles(StorageLocation s1, StorageLocation s2,
 			String validArtNr1) {
-		LinkedList<Article> s1Articles = (LinkedList<Article>) s1.getArticles();
-		LinkedList<Article> s2Articles = (LinkedList<Article>) s2
-				.getArticles(validArtNr1);
+		LinkedList<Article> allArticles = new LinkedList<Article>();
+		allArticles.addAll(s1.getArticles());
+		allArticles.addAll(s2.getArticles(validArtNr1));
 
-		double totWidth = 0;
-		for (Article a : s1Articles) {
-			totWidth += a.getWidth();
-		}
-		for (Article a : s2Articles) {
-			totWidth += a.getWidth();
-		}
-
-		double totArticles = s1Articles.size() + s2Articles.size();
-		if (totWidth <= StorageLocation.MAX_WIDTH
-				&& totArticles <= StorageLocation.MAX_ARTICLES) {
+		if (this.checkCount(allArticles) && this.checkWidth(allArticles))
 			s1.getArticles().addAll(s2.pickAll(validArtNr1));
-		}
-
 	}
 
-	public LinkedList<Article> findArticles(String validArtNr2) {
+	/**
+	 * Finds articles with given id
+	 * 
+	 * @param id
+	 * @return all found articles
+	 */
+	public LinkedList<Article> findArticles(String id) {
 		LinkedList<Article> foundArticles = new LinkedList<Article>();
 
-		for (StorageLocation s : this.storageLocations) {
-			foundArticles.addAll(s.getArticles(validArtNr2));
-		}
+		for (StorageLocation s : this.storageLocations)
+			foundArticles.addAll(s.getArticles(id));
 
 		return foundArticles;
 	}
 
+	/**
+	 * Merge storage locations
+	 * 
+	 * @param s1
+	 *            - to location
+	 * @param s2
+	 *            - from location
+	 */
 	public void mergeStorageLocations(StorageLocation s1, StorageLocation s2) {
+
+		LinkedList<Article> allArticles = new LinkedList<Article>();
+		allArticles.addAll(s1.getArticles());
+		allArticles.addAll(s2.getArticles());
+
+		if (this.checkCount(allArticles) && this.checkWidth(allArticles)) {
+			this.moveAllArticles(s1, s2);
+			this.storageLocations.remove(s2);
+		}
+	}
+
+	/**
+	 * Verifies the total width
+	 * 
+	 * @param articles
+	 *            - articles to verify
+	 * @return true if width is within storage boundaries, false otherwise
+	 */
+	private boolean checkWidth(LinkedList<Article> articles) {
 		double totWidth = 0;
-		double totArticles = 0;
 
-		for (Article art : s1.getArticles()) {
+		for (Article art : articles)
 			totWidth += art.getWidth();
-			totArticles++;
-		}
-
-		for (Article art : s2.getArticles()) {
-			totWidth += art.getWidth();
-			totArticles++;
-		}
 
 		if (totWidth > StorageLocation.MAX_WIDTH)
-			return;
+			return false;
 
-		if (totArticles > StorageLocation.MAX_ARTICLES)
-			return;
+		return true;
+	}
 
-		this.moveAllArticles(s1, s2);
-		this.storageLocations.remove(s2);
+	/**
+	 * Verifies the total number of articles
+	 * 
+	 * @param articles
+	 *            - articles
+	 * @return true if number of articles less than max for storage locaiton,
+	 *         false otherwise
+	 */
+	private boolean checkCount(LinkedList<Article> articles) {
+		if (articles.size() > StorageLocation.MAX_ARTICLES)
+			return false;
 
+		return true;
 	}
 
 }
