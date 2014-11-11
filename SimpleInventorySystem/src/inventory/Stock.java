@@ -1,5 +1,6 @@
 package inventory;
 
+import inventory.exceptions.InvalidTemperatureException;
 import inventory.exceptions.TooManyStorageLocationsException;
 
 import java.util.LinkedHashSet;
@@ -27,7 +28,7 @@ public class Stock {
 	 */
 	public void setTemperature(double d) {
 		if (d < Stock.MIN_TEMP || d > Stock.MAX_TEMP)
-			throw new IllegalArgumentException();
+			throw new InvalidTemperatureException();
 
 		this.temperature = d;
 	}

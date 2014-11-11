@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import inventory.exceptions.InvalidTemperatureException;
 import inventory.exceptions.TooManyStorageLocationsException;
 
 import java.util.HashMap;
@@ -45,7 +46,7 @@ public class TestStock {
 		this.sut.setTemperature(TestStock.JUST_BELOW_LOW);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = InvalidTemperatureException.class)
 	public void shouldThrowErrorOnABitTooWarm() {
 		this.sut.setTemperature(TestStock.JUST_ABOVE_HIGH);
 	}
