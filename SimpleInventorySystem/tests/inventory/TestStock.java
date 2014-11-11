@@ -218,20 +218,11 @@ public class TestStock {
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowExceptionOnNullStorageLocationsWhenMerging()
+	public void shouldThrowWhenMergingUsingNullStorageLocations()
 	{
 		this.sut.mergeStorageLocations(null, null);;
 	}
 
-	/*
-	 * Move between storage locations
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnNullWhenMovingBetweenStorageLocations()
-	{
-		this.sut.moveAllArticles(null, null, null);
-	}
-	
 	@Test
 	public void shouldMoveAllArticlesBetweenStorageLocations() {
 		StorageLocation input1 = this
@@ -259,7 +250,7 @@ public class TestStock {
 	}
 
 	@Test
-	public void shouldMoveAllMatchingArticleNumbersBetweenStorageLocations() {
+	public void shouldMoveAllMatchingArticlesBetweenStorageLocations() {
 		StorageLocation input1 = this
 				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
 		StorageLocation input2 = this
@@ -286,85 +277,23 @@ public class TestStock {
 		this.verifyInvokeArticleWidth(inputArticles2);
 	}
 
-	@Test
-	public void shouldNotMoveArticlesIfTooLargeTotalWidth() {
-		StorageLocation s1 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
-		StorageLocation s2 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME_2);
-
-		LinkedList<Article> expectedBeforeArticlesListS1 = new LinkedList<Article>();
-		LinkedList<Article> expectedAfterArticlesListS1 = new LinkedList<Article>();
-		LinkedList<Article> expectedBeforeArticlesListS2 = this
-				.createArticleList(TestStock.VALID_ART_NR_2,
-						StorageLocation.MAX_WIDTH, 2);
-		LinkedList<Article> expectedAfterArticlesListS2 = this
-				.createArticleList(TestStock.VALID_ART_NR_2,
-						StorageLocation.MAX_WIDTH, 2);
-
-		when(s1.getArticles()).thenReturn(expectedBeforeArticlesListS1)
-				.thenReturn(expectedAfterArticlesListS1);
-		when(s2.getArticles()).thenReturn(expectedBeforeArticlesListS2)
-				.thenReturn(expectedAfterArticlesListS2);
-
-		this.sut.moveAllArticles(s1, s2);
-
-		this.verifyInvokeGetArticles(s1, s2);
-
-		LinkedList<Article> afterArticlesInS1 = (LinkedList<Article>) s1
-				.getArticles();
-		LinkedList<Article> afterArticlesInS2 = (LinkedList<Article>) s2
-				.getArticles();
-
-		assertEquals(expectedAfterArticlesListS1.size(),
-				afterArticlesInS1.size());
-		assertEquals(expectedAfterArticlesListS2.size(),
-				afterArticlesInS2.size());
-	}
-
-	@Test
-	public void shouldNotMoveArtilcesIfTooManyArticles() {
-		StorageLocation s1 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
-		StorageLocation s2 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME_2);
-
-		LinkedList<Article> expectedBeforeArticlesListS1 = new LinkedList<Article>();
-		LinkedList<Article> expectedAfterArticlesListS1 = new LinkedList<Article>();
-		LinkedList<Article> expectedBeforeArticlesListS2 = this
-				.createArticleList(TestStock.VALID_ART_NR_2,
-						StorageLocation.MAX_ARTICLES + 1);
-		LinkedList<Article> expectedAfterArticlesListS2 = this
-				.createArticleList(TestStock.VALID_ART_NR_2,
-						StorageLocation.MAX_ARTICLES + 1);
-
-		when(s1.getArticles()).thenReturn(expectedBeforeArticlesListS1)
-				.thenReturn(expectedAfterArticlesListS1);
-		when(s2.getArticles()).thenReturn(expectedBeforeArticlesListS2)
-				.thenReturn(expectedAfterArticlesListS2);
-
-		this.sut.moveAllArticles(s1, s2);
-
-		this.verifyInvokeGetArticles(s1, s2);
-
-		LinkedList<Article> afterArticlesInS1 = (LinkedList<Article>) s1
-				.getArticles();
-		LinkedList<Article> afterArticlesInS2 = (LinkedList<Article>) s2
-				.getArticles();
-
-		assertEquals(expectedAfterArticlesListS1.size(),
-				afterArticlesInS1.size());
-		assertEquals(expectedAfterArticlesListS2.size(),
-				afterArticlesInS2.size());
-	}
-
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowExceptionOnNullStorageLocation() {
+	public void shouldThrowWhenMovingUsingNullStorageLocation() {
 		
 		this.sut.moveAllArticles(null, null);
 	}
+	
+	/*
+	 * Move between storage locations
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowWhenMovingUsingNullArticleNumber()
+	{
+		this.sut.moveAllArticles(null, null, null);
+	}
+
 	@Test
-	public void shouldNotMoveArticlesWhenTooMany() {
+	public void shouldNotMoveWhenTooManyArticles() {
 		StorageLocation input1 = this
 				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
 		StorageLocation input2 = this
@@ -388,7 +317,7 @@ public class TestStock {
 	}
 
 	@Test
-	public void shouldNotMoveArticlesWithArticleIdWhenTooLargeWidth() {
+	public void shouldNotMoveWhenTooLargeWidth() {
 		StorageLocation input1 = this
 				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
 		StorageLocation input2 = this
@@ -410,11 +339,17 @@ public class TestStock {
 		this.verifyInvokeArticleWidth(inputArticles2);
 	}
 	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowWhenSearchingUsingNullArticleNumber()
+	{
+		this.sut.findArticles(null);
+	}
+
 	/*
 	 * Search articles
 	 */
 	@Test
-	public void shouldNotFindAnyArticles() {
+	public void shouldNotFindAnyArticlesWhenSearching() {
 		StorageLocation input1 = this
 				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
 		StorageLocation input2 = this
@@ -441,17 +376,11 @@ public class TestStock {
 		assertEquals(0, output.size());
 	}
 	
-	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnNullArticleNumberWhenSearching()
-	{
-		this.sut.findArticles(null);
-	}
-
 	/*
 	 * Merge storage locations
 	 */
 	@Test
-	public void shouldNotMergeIfTooLargeWidth() {
+	public void shouldNotMergeWhenTooLargeWidth() {
 		StorageLocation input1 = this
 				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
 		StorageLocation input2 = this
@@ -473,7 +402,7 @@ public class TestStock {
 	}
 
 	@Test
-	public void shouldNotMergeIfTooManyArticles() {
+	public void shouldNotMergeWhenTooManyArticles() {
 		StorageLocation input1 = this
 				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
 		StorageLocation input2 = this

@@ -90,7 +90,6 @@ public class Stock {
 
 	}
 
-
 	/**
 	 * Get storage location by name
 	 * 
@@ -119,19 +118,8 @@ public class Stock {
 	 *            - from location
 	 */
 	public boolean moveAllArticles(StorageLocation s1, StorageLocation s2) {
-		if (null == s1 || null == s2)
-			throw new IllegalArgumentException();
-
-		LinkedList<Article> allArticles = new LinkedList<Article>();
-		allArticles.addAll(s1.getArticles());
-		allArticles.addAll(s2.getArticles());
-
-		if (this.checkCount(allArticles) && this.checkWidth(allArticles)){
-			s1.insertMany(s2.pickAll());
-			return true;
-		}
 		
-		return false;
+		return this.moveAllArticles(s1, s2, null);
 	}
 
 	/**
@@ -141,20 +129,26 @@ public class Stock {
 	 *            - to location
 	 * @param s2
 	 *            - from location
-	 * @param validArtNr1
+	 * @param artrnr
+	 *            - article number
 	 */
-	public void moveAllArticles(StorageLocation s1, StorageLocation s2,
+	public boolean moveAllArticles(StorageLocation s1, StorageLocation s2,
 			String artNr) {
-		
-		if(null == s1 || null == s2 || null == artNr)
+
+		if (null == s1 || null == s2)
 			throw new IllegalArgumentException();
-		
+
 		LinkedList<Article> allArticles = new LinkedList<Article>();
 		allArticles.addAll(s1.getArticles());
-		allArticles.addAll(s2.getArticles(artNr));
+		allArticles.addAll(artNr == null ? s2.getArticles() : s2.getArticles(artNr));
 
 		if (this.checkCount(allArticles) && this.checkWidth(allArticles))
-			s1.insertMany(s2.pickAll(artNr));
+		{
+			s1.insertMany(artNr == null ? s2.pickAll() : s2.pickAll(artNr));
+			return true;
+		}
+		
+		return false;
 	}
 
 	/**
@@ -217,7 +211,7 @@ public class Stock {
 	 * 
 	 * @param articles
 	 *            - articles
-	 * @return true if number of articles less than max for storage locaiton,
+	 * @return true if number of articles less than max for storage location,
 	 *         false otherwise
 	 */
 	private boolean checkCount(LinkedList<Article> articles) {
@@ -226,7 +220,6 @@ public class Stock {
 
 		return true;
 	}
-
 
 	/**
 	 * Removes external duplications, i.e. duplicated storage locations to be
@@ -259,7 +252,7 @@ public class Stock {
 		if (this.storageLocations.size() + numbersToAdd > Stock.MAX_STORAGE_LOCATIONS)
 			throw new TooManyStorageLocationsException();
 	}
-	
+
 	/**
 	 * Returns true if duplication exists, false otherwise
 	 * 
