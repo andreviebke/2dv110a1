@@ -1,19 +1,21 @@
 package inventory;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-import org.mockito.stubbing.OngoingStubbing;
 
 public class TestStock {
 
@@ -206,29 +208,24 @@ public class TestStock {
 		StorageLocation s2 = this
 				.generateStorageLocation(TestStock.VALID_STORAGE_NAME_2);
 
-		LinkedList<Article> expectedBeforeArticlesListS1 = new LinkedList<Article>();
-		LinkedList<Article> expectedBeforeArticlesListS2 = new LinkedList<Article>();
-		LinkedList<Article> expectedAfterArticlesListS1 = new LinkedList<Article>();
-		LinkedList<Article> expectedAfterArticlesListS2 = new LinkedList<Article>();
-
-		this.populateArticleList(TestStock.VALID_ART_NR_1,
-				expectedBeforeArticlesListS1, 2);
-		this.populateArticleList(TestStock.VALID_ART_NR_1,
-				expectedBeforeArticlesListS2, 1);
+		LinkedList<Article> expectedBeforeArticlesListS1 = this
+				.createArticleList(TestStock.VALID_ART_NR_1, 2);
+		LinkedList<Article> expectedBeforeArticlesListS2 = this
+				.createArticleList(TestStock.VALID_ART_NR_1, 1);
 		this.populateArticleList(TestStock.VALID_ART_NR_2,
 				expectedBeforeArticlesListS2, 1);
-		this.populateArticleList(TestStock.VALID_ART_NR_1,
-				expectedAfterArticlesListS1, 3);
+		LinkedList<Article> expectedAfterArticlesListS1 = this
+				.createArticleList(TestStock.VALID_ART_NR_1, 3);
 		this.populateArticleList(TestStock.VALID_ART_NR_2,
 				expectedAfterArticlesListS1, 1);
+		LinkedList<Article> expectedAfterArticlesListS2 = new LinkedList<Article>();
 
 		when(s1.getArticles()).thenReturn(expectedBeforeArticlesListS1);
 		when(s2.pickAll()).thenReturn(expectedBeforeArticlesListS2);
 
 		this.sut.moveAllArticles(s1, s2);
 
-		verify(s1, times(2)).getArticles();
-		verify(s2).getArticles();
+		this.verifyGetArticles(s1, s1, s2);
 		verify(s2).pickAll();
 
 		LinkedList<Article> afterArticlesInS1 = (LinkedList<Article>) s1
@@ -249,21 +246,16 @@ public class TestStock {
 		StorageLocation s2 = this
 				.generateStorageLocation(TestStock.VALID_STORAGE_NAME_2);
 
-		LinkedList<Article> expectedBeforeArticlesListS1 = new LinkedList<Article>();
-		LinkedList<Article> expectedBeforeArticlesListS2 = new LinkedList<Article>();
-		LinkedList<Article> expectedAfterArticlesListS1 = new LinkedList<Article>();
-		LinkedList<Article> expectedAfterArticlesListS2 = new LinkedList<Article>();
-
-		this.populateArticleList(TestStock.VALID_ART_NR_1,
-				expectedBeforeArticlesListS1, 2);
-		this.populateArticleList(TestStock.VALID_ART_NR_1,
-				expectedBeforeArticlesListS2, 1);
+		LinkedList<Article> expectedBeforeArticlesListS1 = this
+				.createArticleList(TestStock.VALID_ART_NR_1, 2);
+		LinkedList<Article> expectedBeforeArticlesListS2 = this
+				.createArticleList(TestStock.VALID_ART_NR_1, 1);
 		this.populateArticleList(TestStock.VALID_ART_NR_2,
 				expectedBeforeArticlesListS2, 1);
-		this.populateArticleList(TestStock.VALID_ART_NR_1,
-				expectedAfterArticlesListS1, 3);
-		this.populateArticleList(TestStock.VALID_ART_NR_2,
-				expectedAfterArticlesListS2, 1);
+		LinkedList<Article> expectedAfterArticlesListS1 = this
+				.createArticleList(TestStock.VALID_ART_NR_1, 3);
+		LinkedList<Article> expectedAfterArticlesListS2 = this
+				.createArticleList(TestStock.VALID_ART_NR_2, 1);
 
 		when(s1.getArticles()).thenReturn(expectedBeforeArticlesListS1)
 				.thenReturn(expectedAfterArticlesListS1);
@@ -273,7 +265,7 @@ public class TestStock {
 
 		this.sut.moveAllArticles(s1, s2, TestStock.VALID_ART_NR_1);
 
-		verify(s1).getArticles();
+		this.verifyGetArticles(s1);
 		verify(s2).pickAll(TestStock.VALID_ART_NR_1);
 
 		LinkedList<Article> afterArticlesInS1 = (LinkedList<Article>) s1
@@ -296,15 +288,12 @@ public class TestStock {
 
 		LinkedList<Article> expectedBeforeArticlesListS1 = new LinkedList<Article>();
 		LinkedList<Article> expectedAfterArticlesListS1 = new LinkedList<Article>();
-		LinkedList<Article> expectedBeforeArticlesListS2 = new LinkedList<Article>();
-		LinkedList<Article> expectedAfterArticlesListS2 = new LinkedList<Article>();
-		this.populateArticleList(TestStock.VALID_ART_NR_2,
-				expectedBeforeArticlesListS2, 2);
-		this.populateArticleList(TestStock.VALID_ART_NR_2,
-				expectedBeforeArticlesListS2, 2);
-		for (Article a : expectedBeforeArticlesListS2) {
-			when(a.getWidth()).thenReturn(StorageLocation.MAX_WIDTH);
-		}
+		LinkedList<Article> expectedBeforeArticlesListS2 = this
+				.createArticleList(TestStock.VALID_ART_NR_2,
+						StorageLocation.MAX_WIDTH, 2);
+		LinkedList<Article> expectedAfterArticlesListS2 = this
+				.createArticleList(TestStock.VALID_ART_NR_2,
+						StorageLocation.MAX_WIDTH, 2);
 
 		when(s1.getArticles()).thenReturn(expectedBeforeArticlesListS1)
 				.thenReturn(expectedAfterArticlesListS1);
@@ -313,8 +302,7 @@ public class TestStock {
 
 		this.sut.moveAllArticles(s1, s2);
 
-		verify(s1).getArticles();
-		verify(s2).getArticles();
+		this.verifyGetArticles(s1, s2);
 
 		LinkedList<Article> afterArticlesInS1 = (LinkedList<Article>) s1
 				.getArticles();
@@ -336,12 +324,12 @@ public class TestStock {
 
 		LinkedList<Article> expectedBeforeArticlesListS1 = new LinkedList<Article>();
 		LinkedList<Article> expectedAfterArticlesListS1 = new LinkedList<Article>();
-		LinkedList<Article> expectedBeforeArticlesListS2 = new LinkedList<Article>();
-		LinkedList<Article> expectedAfterArticlesListS2 = new LinkedList<Article>();
-		this.populateArticleList(TestStock.VALID_ART_NR_2,
-				expectedBeforeArticlesListS2, StorageLocation.MAX_ARTICLES + 1);
-		this.populateArticleList(TestStock.VALID_ART_NR_2,
-				expectedAfterArticlesListS2, StorageLocation.MAX_ARTICLES + 1);
+		LinkedList<Article> expectedBeforeArticlesListS2 = this
+				.createArticleList(TestStock.VALID_ART_NR_2,
+						StorageLocation.MAX_ARTICLES + 1);
+		LinkedList<Article> expectedAfterArticlesListS2 = this
+				.createArticleList(TestStock.VALID_ART_NR_2,
+						StorageLocation.MAX_ARTICLES + 1);
 
 		when(s1.getArticles()).thenReturn(expectedBeforeArticlesListS1)
 				.thenReturn(expectedAfterArticlesListS1);
@@ -350,8 +338,7 @@ public class TestStock {
 
 		this.sut.moveAllArticles(s1, s2);
 
-		verify(s1).getArticles();
-		verify(s2).getArticles();
+		this.verifyGetArticles(s1, s2);
 
 		LinkedList<Article> afterArticlesInS1 = (LinkedList<Article>) s1
 				.getArticles();
@@ -374,10 +361,10 @@ public class TestStock {
 		StorageLocation s2 = this
 				.generateStorageLocation(TestStock.VALID_STORAGE_NAME_2);
 
-		LinkedList<Article> articleListS1 = new LinkedList<Article>();
-		LinkedList<Article> articleListS2 = new LinkedList<Article>();
-		this.populateArticleList(TestStock.VALID_ART_NR_1, articleListS1, 3);
-		this.populateArticleList(TestStock.VALID_ART_NR_1, articleListS2, 1);
+		LinkedList<Article> articleListS1 = this.createArticleList(
+				TestStock.VALID_ART_NR_1, 3);
+		LinkedList<Article> articleListS2 = this.createArticleList(
+				TestStock.VALID_ART_NR_1, 1);
 
 		when(s1.getArticles(TestStock.VALID_ART_NR_1))
 				.thenReturn(articleListS1);
@@ -389,8 +376,8 @@ public class TestStock {
 		LinkedList<Article> output = this.sut
 				.findArticles(TestStock.VALID_ART_NR_2);
 
-		verify(s1).getArticles(TestStock.VALID_ART_NR_2);
-		verify(s2).getArticles(TestStock.VALID_ART_NR_2);
+		this.verifyGetArticles(TestStock.VALID_ART_NR_2, s1);
+		this.verifyGetArticles(TestStock.VALID_ART_NR_2, s2);
 
 		assertEquals(0, output.size());
 	}
@@ -405,26 +392,23 @@ public class TestStock {
 		StorageLocation s2 = this
 				.generateStorageLocation(TestStock.VALID_STORAGE_NAME_2);
 
-		LinkedList<Article> articleListS1 = new LinkedList<Article>();
-		LinkedList<Article> articleListS2 = new LinkedList<Article>();
-		this.populateArticleList(TestStock.VALID_ART_NR_1, articleListS1, 3);
-		this.populateArticleList(TestStock.VALID_ART_NR_2, articleListS2, 1);
+		LinkedList<Article> eBeforeArticlesS1 = this.createArticleList(
+				TestStock.VALID_ART_NR_1, 3);
+		LinkedList<Article> eBeforeArticlesS2 = this.createArticleList(
+				TestStock.VALID_ART_NR_2, 1);
 
-		when(s1.getArticles()).thenReturn(articleListS1);
-		when(s2.getArticles()).thenReturn(articleListS2);
+		when(s1.getArticles()).thenReturn(eBeforeArticlesS1);
+		when(s2.getArticles()).thenReturn(eBeforeArticlesS2);
 
 		this.sut.mergeStorageLocations(s1, s2);
 
-		verify(s1).getArticles();
-		verify(s2).getArticles();
-		for (Article art : articleListS1)
-			verify(art).getWidth();
-		for (Article art : articleListS2)
-			verify(art).getWidth();
+		this.verifyGetArticles(s1, s2);
+		verifyArticlesGetWidth(eBeforeArticlesS1);
+		verifyArticlesGetWidth(eBeforeArticlesS2);
 
 		assertFalse(s2.getArticles().size() == 0);
-		assertFalse(s1.getArticles().size() == articleListS1.size()
-				+ articleListS2.size());
+		assertFalse(s1.getArticles().size() == eBeforeArticlesS1.size()
+				+ eBeforeArticlesS2.size());
 	}
 
 	@Test
@@ -434,32 +418,30 @@ public class TestStock {
 		StorageLocation s2 = this
 				.generateStorageLocation(TestStock.VALID_STORAGE_NAME_2);
 
-		LinkedList<Article> expectedBeforeArticlesListS1 = new LinkedList<Article>();
-		LinkedList<Article> expectedAfterArticlesListS1 = new LinkedList<Article>();
-		LinkedList<Article> expectedBeforeArticlesListS2 = new LinkedList<Article>();
-		LinkedList<Article> expectedAfterArticlesListS2 = new LinkedList<Article>();
-		this.populateArticleList(TestStock.VALID_ART_NR_2,
-				expectedBeforeArticlesListS2, StorageLocation.MAX_ARTICLES + 1);
-		this.populateArticleList(TestStock.VALID_ART_NR_2,
-				expectedAfterArticlesListS2, StorageLocation.MAX_ARTICLES + 1);
+		LinkedList<Article> eBeforeArticlesS1 = this.createArticleList(
+				TestStock.VALID_ART_NR_2, StorageLocation.MAX_ARTICLES + 1);
+		;
+		LinkedList<Article> eAfterArticlesS1 = new LinkedList<Article>();
+		LinkedList<Article> eBeforeArticlesS2 = new LinkedList<Article>();
+		LinkedList<Article> eAfterArticlesS2 = this.createArticleList(
+				TestStock.VALID_ART_NR_2, StorageLocation.MAX_ARTICLES + 1);
 
-		when(s1.getArticles()).thenReturn(expectedBeforeArticlesListS1)
-				.thenReturn(expectedAfterArticlesListS1);
-		when(s2.getArticles()).thenReturn(expectedBeforeArticlesListS2)
-				.thenReturn(expectedAfterArticlesListS2);
+		when(s1.getArticles()).thenReturn(eBeforeArticlesS1).thenReturn(
+				eAfterArticlesS1);
+		when(s2.getArticles()).thenReturn(eBeforeArticlesS2).thenReturn(
+				eAfterArticlesS2);
 
 		this.sut.mergeStorageLocations(s1, s2);
 
-		verify(s1).getArticles();
-		verify(s2).getArticles();
-		
+		this.verifyGetArticles(s1, s2);
+
 		LinkedList<Article> afterArticlesInS1 = (LinkedList<Article>) s1
 				.getArticles();
 		LinkedList<Article> afterArticlesInS2 = (LinkedList<Article>) s2
 				.getArticles();
 
-		assertEquals(expectedAfterArticlesListS1.size(), afterArticlesInS1.size());
-		assertEquals(expectedAfterArticlesListS2.size(), afterArticlesInS2.size());
+		assertEquals(eAfterArticlesS1.size(), afterArticlesInS1.size());
+		assertEquals(eAfterArticlesS2.size(), afterArticlesInS2.size());
 	}
 
 	/*
@@ -469,6 +451,12 @@ public class TestStock {
 			int count) {
 		for (int i = 0; i < count; i++)
 			articles.add(this.generateArticle(name));
+	}
+
+	private void populateArticleList(String name, LinkedList<Article> articles,
+			int count, double width) {
+		for (int i = 0; i < count; i++)
+			articles.add(this.generateArticle(name, width));
 	}
 
 	private LinkedList<StorageLocation> generateStorageLocations(int count,
@@ -516,4 +504,57 @@ public class TestStock {
 		return mock;
 	}
 
+	private Article generateArticle(String name, double width) {
+		Article mock = mock(Article.class);
+		when(mock.getArtNr()).thenReturn(name);
+		when(mock.getWidth()).thenReturn(width);
+		return mock;
+	}
+
+	private void verifyGetArticles(StorageLocation... storageLocations) {
+		HashMap<StorageLocation, Integer> locations = new HashMap<StorageLocation, Integer>();
+		for (int i = 0; i < storageLocations.length; i++)
+			if (locations.containsKey(storageLocations[i]))
+				locations.put(storageLocations[i],
+						locations.get(storageLocations[i]) + 1);
+			else
+				locations.put(storageLocations[i], 1);
+
+		for (Map.Entry<StorageLocation, Integer> s : locations.entrySet())
+			verify(s.getKey(), times(s.getValue())).getArticles();
+	}
+
+	private void verifyGetArticles(String name,
+			StorageLocation... storageLocations) {
+		HashMap<StorageLocation, Integer> locations = new HashMap<StorageLocation, Integer>();
+		for (int i = 0; i < storageLocations.length; i++)
+			if (locations.containsKey(storageLocations[i]))
+				locations.put(storageLocations[i],
+						locations.get(storageLocations[i]) + 1);
+			else
+				locations.put(storageLocations[i], 1);
+
+		for (Map.Entry<StorageLocation, Integer> s : locations.entrySet())
+			verify(s.getKey(), times(s.getValue())).getArticles(name);
+	}
+
+	private void verifyArticlesGetWidth(LinkedList<Article> eBeforeArticlesS1) {
+		for (Article art : eBeforeArticlesS1)
+			verify(art).getWidth();
+	}
+
+	private LinkedList<Article> createArticleList(String name, int count) {
+		LinkedList<Article> articles = new LinkedList<Article>();
+		for (int i = 0; i < count; i++)
+			articles.add(this.generateArticle(name));
+		return articles;
+	}
+
+	private LinkedList<Article> createArticleList(String name, double width,
+			int count) {
+		LinkedList<Article> articles = new LinkedList<Article>();
+		for (int i = 0; i < count; i++)
+			articles.add(this.generateArticle(name, width));
+		return articles;
+	}
 }
