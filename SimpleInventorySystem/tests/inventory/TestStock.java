@@ -226,6 +226,12 @@ public class TestStock {
 	/*
 	 * Move between storage locations
 	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowOnNullWhenMovingBetweenStorageLocations()
+	{
+		this.sut.moveAllArticles(null, null, null);
+	}
+	
 	@Test
 	public void shouldMoveAllArticlesBetweenStorageLocations() {
 		StorageLocation input1 = this
@@ -357,7 +363,53 @@ public class TestStock {
 		
 		this.sut.moveAllArticles(null, null);
 	}
+	@Test
+	public void shouldNotMoveArticlesWhenTooMany() {
+		StorageLocation input1 = this
+				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
+		StorageLocation input2 = this
+				.createStorageLocations(TestStock.VALID_STORAGE_NAME_2);
 
+		LinkedList<Article> inputArticles1 = this.createArticleList(
+				TestStock.VALID_ART_NR_2, StorageLocation.MAX_ARTICLES + 1);
+		LinkedList<Article> inputArticles2 = this.createArticleList(
+				TestStock.VALID_ART_NR_2, StorageLocation.MAX_ARTICLES + 1);
+
+		when(input1.getArticles()).thenReturn(inputArticles1);
+		when(input2.getArticles(anyString())).thenReturn(inputArticles2);
+		when(input2.pickAll()).thenReturn(inputArticles2);
+
+		this.sut.moveAllArticles(input1, input2, TestStock.VALID_ART_NR_2);
+
+		this.verifyInvokeGetArticles(TestStock.VALID_ART_NR_2, input2);
+		this.verifyInvokeGetArticles(input1);
+		this.verifyNotInvokingGetWidth(inputArticles1);
+		this.verifyNotInvokingGetWidth(inputArticles2);
+	}
+
+	@Test
+	public void shouldNotMoveArticlesWithArticleIdWhenTooLargeWidth() {
+		StorageLocation input1 = this
+				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
+		StorageLocation input2 = this
+				.createStorageLocations(TestStock.VALID_STORAGE_NAME_2);
+
+		LinkedList<Article> inputArticles1 = new LinkedList<Article>();
+		LinkedList<Article> inputArticles2 = this.createArticleList(
+				TestStock.VALID_ART_NR_2, StorageLocation.MAX_WIDTH / 2 + 0.1,
+				2);
+
+		when(input1.getArticles()).thenReturn(inputArticles1);
+		when(input2.getArticles(anyString())).thenReturn(inputArticles2);
+
+		this.sut.moveAllArticles(input1, input2, TestStock.VALID_ART_NR_2);
+
+		this.verifyInvokeGetArticles(TestStock.VALID_ART_NR_2, input2);
+		this.verifyInvokeGetArticles(input1);
+		this.verifyInvokeArticleWidth(inputArticles1);
+		this.verifyInvokeArticleWidth(inputArticles2);
+	}
+	
 	/*
 	 * Search articles
 	 */
@@ -459,63 +511,13 @@ public class TestStock {
 
 		this.sut.mergeStorageLocations(input1, input2);
 
-		this.verifyInvokeGetArticles(input1, input1, input2, input2);
+		this.verifyInvokeGetArticles(input1, input2);
 		verify(input2).pickAll();
 		verify(input1).insertMany(inputArticles2);
-		this.verifyInvokeArticleWdith(inputArticles1, 2);
-		this.verifyInvokeArticleWdith(inputArticles2, 2);
+		this.verifyInvokeArticleWdith(inputArticles1, 1);
+		this.verifyInvokeArticleWdith(inputArticles2, 1);
 	}
-
-	/*
-	 * Move between storage locations
-	 */
-	@Test
-	public void shouldNotMoveArticlesWhenTooMany() {
-		StorageLocation input1 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
-		StorageLocation input2 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME_2);
-
-		LinkedList<Article> inputArticles1 = this.createArticleList(
-				TestStock.VALID_ART_NR_2, StorageLocation.MAX_ARTICLES + 1);
-		LinkedList<Article> inputArticles2 = this.createArticleList(
-				TestStock.VALID_ART_NR_2, StorageLocation.MAX_ARTICLES + 1);
-
-		when(input1.getArticles()).thenReturn(inputArticles1);
-		when(input2.getArticles(anyString())).thenReturn(inputArticles2);
-		when(input2.pickAll()).thenReturn(inputArticles2);
-
-		this.sut.moveAllArticles(input1, input2, TestStock.VALID_ART_NR_2);
-
-		this.verifyInvokeGetArticles(TestStock.VALID_ART_NR_2, input2);
-		this.verifyInvokeGetArticles(input1);
-		this.verifyNotInvokingGetWidth(inputArticles1);
-		this.verifyNotInvokingGetWidth(inputArticles2);
-	}
-
-	@Test
-	public void shouldNotMoveArticlesWithArticleIdWhenTooLargeWidth() {
-		StorageLocation input1 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
-		StorageLocation input2 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME_2);
-
-		LinkedList<Article> inputArticles1 = new LinkedList<Article>();
-		LinkedList<Article> inputArticles2 = this.createArticleList(
-				TestStock.VALID_ART_NR_2, StorageLocation.MAX_WIDTH / 2 + 0.1,
-				2);
-
-		when(input1.getArticles()).thenReturn(inputArticles1);
-		when(input2.getArticles(anyString())).thenReturn(inputArticles2);
-
-		this.sut.moveAllArticles(input1, input2, TestStock.VALID_ART_NR_2);
-
-		this.verifyInvokeGetArticles(TestStock.VALID_ART_NR_2, input2);
-		this.verifyInvokeGetArticles(input1);
-		this.verifyInvokeArticleWidth(inputArticles1);
-		this.verifyInvokeArticleWidth(inputArticles2);
-	}
-
+	
 	/*
 	 * Helper methods
 	 */
