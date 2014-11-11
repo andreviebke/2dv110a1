@@ -167,12 +167,9 @@ public class Stock {
 
 		LinkedList<StorageLocation> toReturn = new LinkedList<StorageLocation>();
 
-		for (StorageLocation loc : this.storageLocations) {
-			String name = loc.getName();
-			if (name.equalsIgnoreCase(storageName)) {
-				toReturn.add(loc);
-			}
-		}
+		for (StorageLocation loc : this.storageLocations) 	
+			if (loc.getName().equalsIgnoreCase(storageName))
+				toReturn.add(loc);		
 
 		return toReturn;
 	}
@@ -191,7 +188,7 @@ public class Stock {
 		allArticles.addAll(s2.getArticles());
 
 		if (this.checkCount(allArticles) && this.checkWidth(allArticles))
-			s1.getArticles().addAll(s2.pickAll());
+			s1.insertMany(s2.pickAll());
 	}
 
 	/**
@@ -210,7 +207,7 @@ public class Stock {
 		allArticles.addAll(s2.getArticles(validArtNr1));
 
 		if (this.checkCount(allArticles) && this.checkWidth(allArticles))
-			s1.getArticles().addAll(s2.pickAll(validArtNr1));
+			s1.insertMany(s2.pickAll(validArtNr1));
 	}
 
 	/**
