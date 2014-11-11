@@ -237,6 +237,8 @@ public class Stock {
 	 *            - from location
 	 */
 	public void mergeStorageLocations(StorageLocation s1, StorageLocation s2) {
+		if(null == s1 || null == s2)
+			throw new IllegalArgumentException();
 
 		LinkedList<Article> allArticles = new LinkedList<Article>();
 		allArticles.addAll(s1.getArticles());
