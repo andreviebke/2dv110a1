@@ -188,6 +188,26 @@ public class Stock {
 	}
 
 	/**
+	 * Remove all storage locations
+	 */
+	public void removeAllStorageLocations() {
+		this.storageLocations.clear();
+	}
+
+	/**
+	 * Removes all storage locations matching names
+	 * @param name - name of storage location
+	 */
+	public void removeAllStorageLocations(String name) {
+		if (null == name)
+			throw new IllegalArgumentException();
+
+		this.storageLocations.removeAll(this
+				.getStorageLocationsByName(name));
+
+	}
+
+	/**
 	 * Verifies the total width
 	 * 
 	 * @param articles
@@ -284,21 +304,5 @@ public class Stock {
 				new LinkedHashSet<StorageLocation>(toInsert));
 
 		return toReturn;
-	}
-
-	/**
-	 * Deletes all storage locations
-	 */
-	public void deleteAllStorageLocations() {
-		this.storageLocations.clear();
-	}
-
-	public void deteleAllStorageLocations(String validStorageName) {
-		if (null == validStorageName)
-			throw new IllegalArgumentException();
-
-		this.storageLocations.removeAll(this
-				.getStorageLocationsByName(validStorageName));
-
 	}
 }

@@ -24,25 +24,26 @@ public class TestArticle {
 	}
 
 	/*
-	 * Creation of article
+	 * Creation
 	 */
+	
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnNullArticleNumber() {
+	public void shouldThrowWhenNullArticleNumber() {
 		new Article(null, TestArticle.VALID_WIDTH);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnTooLongArticleNumber() {
+	public void shouldThrowWhenTooLongArticleNumber() {
 		new Article(TestArticle.TOO_LONG_ART_NR, TestArticle.VALID_WIDTH);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnTooSmallWidth() {
+	public void shouldThrowWhenTooSmallWidth() {
 		new Article(TestArticle.VALID_ART_NR, TestArticle.TOO_SMALL_WIDTH);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnTooLargeWidth() {
+	public void shouldThrowWhenCreatingWithTooLargeWidth() {
 		new Article(TestArticle.VALID_ART_NR, TestArticle.TOO_LARGE_WIDTH);
 	}
 
@@ -74,17 +75,17 @@ public class TestArticle {
 	}
 
 	@Test(expected = InvalidWidthException.class)
-	public void shoudlThrowOnTooLargeWidth() {
+	public void shouldThrowWhenTooLargeWidth() {
 		this.sut.setWidth(TestArticle.TOO_LARGE_WIDTH);
 	}
 
 	@Test(expected = InvalidNameException.class)
-	public void shouldThrowOnTooLongArtNr() {
+	public void shouldThrowWhenTooLongArtNr() {
 		this.sut.setArtNr(TestArticle.TOO_LONG_ART_NR);
 	}
 
 	@Test(expected = InvalidNameException.class)
-	public void shouldThrowOnNullArtNr() {
+	public void shouldThrowWhenNullArtNr() {
 		this.sut.setArtNr(null);
 	}
 }

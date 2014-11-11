@@ -41,7 +41,7 @@ public class TestStorageLocation {
 	 */
 
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnNullName() {
+	public void shouldThrowWhenNullName() {
 		new StorageLocation(null);
 	}
 
@@ -52,7 +52,7 @@ public class TestStorageLocation {
 
 	@Test
 	public void shouldCreateInstanceWithArticles() {
-		LinkedList<Article> articles = this.generateArticles(
+		LinkedList<Article> articles = this.createArticleList(
 				TestStorageLocation.VALID_NUM_ARTICLES, 0.0);
 		this.createSUTWithValidStorageName(articles);
 
@@ -62,16 +62,16 @@ public class TestStorageLocation {
 	}
 
 	@Test(expected = TooManyArticlesException.class)
-	public void shouldThrowOnTooManyArticles() {
-		LinkedList<Article> articles = this.generateArticles(
+	public void shouldThrowWhenTooManyArticles() {
+		LinkedList<Article> articles = this.createArticleList(
 				StorageLocation.MAX_ARTICLES + 1, 0.0);
 
 		this.createSUTWithValidStorageName(articles);
 	}
 
 	@Test(expected = InvalidWidthException.class)
-	public void shouldThrowOnTooLargeWidth() {
-		LinkedList<Article> articles = this.generateArticles(1,
+	public void shouldThrowWhenTooLargeWidth() {
+		LinkedList<Article> articles = this.createArticleList(1,
 				TestStorageLocation.TOO_LARGE_WIDTH);
 
 		this.createSUTWithValidStorageName(articles);
@@ -83,7 +83,7 @@ public class TestStorageLocation {
 	 * Get
 	 */
 	@Test
-	public void shouldGetNoArticles() {
+	public void shouldReturnNoArticles() {
 		LinkedList<Article> output = (LinkedList<Article>) this.sut
 				.getArticles();
 
@@ -91,7 +91,7 @@ public class TestStorageLocation {
 	}
 
 	@Test
-	public void shouldGetNoArticlesWhenArticleNumberDoesNotExist() {
+	public void shouldReturnNoArticlesWhenArticleNumberDoesNotExist() {
 		LinkedList<Article> output = this.sut
 				.getArticles(TestStorageLocation.NONE_EXISTING_ART_NR);
 
@@ -99,7 +99,7 @@ public class TestStorageLocation {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowOnGetWhenUsingNullArticleNumber() {
+	public void shouldThrowWhenUsingNullArticleNumber() {
 		this.sut.getArticles(null);
 	}
 
@@ -108,9 +108,10 @@ public class TestStorageLocation {
 	 */
 
 	@Test
-	public void shoudInsertOneArticle() {
+	public void shouldInsertOneArticle() {
 		Article mock = this.createMockArticle(TestStorageLocation.VALID_WIDTH,
 				TestStorageLocation.ARTICLE_NAME);
+		
 		this.sut.insert(mock);
 
 		verify(mock).getWidth();
@@ -196,8 +197,8 @@ public class TestStorageLocation {
 	}
 
 	@Test(expected = InvalidWidthException.class)
-	public void shouldThrowOnInsertManyArticlesWithTooLargeTotalWidth() {
-		LinkedList<Article> input = this.generateArticles(5,				
+	public void shouldThrowWhenInsertManyArticlesWhenTooLargeTotalWidth() {
+		LinkedList<Article> input = this.createArticleList(5,				
 				TestStorageLocation.TOO_LARGE_WIDTH / 5);		
 		
 		this.sut.insertMany(input);
@@ -205,9 +206,22 @@ public class TestStorageLocation {
 		this.verifyInvokeGetWidth(input);
 	}
 
+	@Test(expected = InvalidWidthException.class)
+	public void shouldThrowWhenInsertManyArticlesWhenTooLargeTotalWidthExisting() {
+		this.insert5Articles();
+	
+		LinkedList<Article> articles = new LinkedList<Article>();
+		articles.add(this.createMockArticle(StorageLocation.MAX_WIDTH,
+				TestStorageLocation.ARTICLE_NAME));
+		
+		this.sut.insertMany(articles);
+	
+		this.verifyInvokeGetWidth(articles);
+	}
+
 	@Test(expected = TooManyArticlesException.class)
-	public void shouldThrowOnInsertTooManyArticlesAtOnce() {
-		LinkedList<Article> input = this.generateArticles(
+	public void shouldThrowWhenInsertTooManyArticlesAtOnce() {
+		LinkedList<Article> input = this.createArticleList(
 				StorageLocation.MAX_ARTICLES + 1,
 				TestStorageLocation.VALID_WIDTH);
 
@@ -217,9 +231,9 @@ public class TestStorageLocation {
 	}
 
 	@Test(expected = TooManyArticlesException.class)
-	public void shouldThrowOnInsertTooManyArticlesWhenExisting() {
+	public void shouldThrowWhenInsertTooManyArticlesWhenExisting() {
 		LinkedList<Article> input = this.insert5Articles();
-		input.addAll(this.generateArticles(StorageLocation.MAX_ARTICLES
+		input.addAll(this.createArticleList(StorageLocation.MAX_ARTICLES
 				- (input.size() - 1), TestStorageLocation.VALID_WIDTH));
 		
 		this.sut.insertMany(input);
@@ -227,18 +241,7 @@ public class TestStorageLocation {
 		this.verifyInvokeNeverArticles(input);
 	}
 
-	@Test(expected = InvalidWidthException.class)
-	public void shouldThrowOnInsertManyArticlesWhenTooLargeWidthWithExisting() {
-		this.insert5Articles();
-
-		LinkedList<Article> articles = new LinkedList<Article>();
-		articles.add(this.createMockArticle(StorageLocation.MAX_WIDTH,
-				TestStorageLocation.ARTICLE_NAME));
-		
-		this.sut.insertMany(articles);
-
-		this.verifyInvokeGetWidth(articles);
-	}
+	
 
 	/*
 	 * Pick
@@ -325,12 +328,19 @@ public class TestStorageLocation {
 	}
 
 	private LinkedList<Article> insert5Articles() {
-		LinkedList<Article> articles = this.generateArticles(5, 10);
+		LinkedList<Article> articles = this.createArticleList(5, 10);
 		this.sut.insertMany(articles);
 		return articles;
 	}
 
-	private LinkedList<Article> generateArticles(int count, double width) {
+	/*
+	 * Creations
+	 */
+	private void createSUTWithValidName() {
+		this.sut = new StorageLocation(TestStorageLocation.VALIDSTORAGE_NAME);
+	}
+
+	private LinkedList<Article> createArticleList(int count, double width) {
 
 		LinkedList<Article> articles = new LinkedList<Article>();
 
@@ -341,6 +351,26 @@ public class TestStorageLocation {
 		}
 
 		return articles;
+	}
+
+	private void createSUTWithValidStorageName(LinkedList<Article> articles) {
+		this.sut = new StorageLocation(TestStorageLocation.VALIDSTORAGE_NAME,
+				articles);
+	}
+
+	private Article createMockArticle(double width, String name) {
+		Article mock = mock(Article.class);
+		when(mock.getArtNr()).thenReturn(name);
+		when(mock.getWidth()).thenReturn(width);
+		return mock;
+	}
+
+	/*
+	 * Verifications
+	 */
+	private void verifyInvokeNeverArticles(LinkedList<Article> articles) {
+		for(Article a : articles)
+			verify(a, never()).getWidth();
 	}
 	
 	private void verifyInvokeGetWidth(LinkedList<Article> articles) {
@@ -357,26 +387,5 @@ public class TestStorageLocation {
 
 		for (Article a : articles)
 			verify(a).getArtNr();
-	}
-
-	private void createSUTWithValidName() {
-		this.sut = new StorageLocation(TestStorageLocation.VALIDSTORAGE_NAME);
-	}
-
-	private void createSUTWithValidStorageName(LinkedList<Article> articles) {
-		this.sut = new StorageLocation(TestStorageLocation.VALIDSTORAGE_NAME,
-				articles);
-	}
-
-	private Article createMockArticle(double width, String name) {
-		Article mock = mock(Article.class);
-		when(mock.getArtNr()).thenReturn(name);
-		when(mock.getWidth()).thenReturn(width);
-		return mock;
-	}
-
-	private void verifyInvokeNeverArticles(LinkedList<Article> articles) {
-		for(Article a : articles)
-			verify(a, never()).getWidth();
 	}
 }

@@ -29,6 +29,9 @@ public class TestStock {
 	private static final String VALID_STORAGE_NAME_2 = "SomeOtherName";
 	private static final String VALID_ART_NR_1 = "1";
 	private static final String VALID_ART_NR_2 = "2";
+	private static final int VALID_NUM_STORAGE_LOCATIONS = Stock.MAX_STORAGE_LOCATIONS - 1;
+	private static final int TOO_MANY_STORAGE_LOCATIONS = Stock.MAX_STORAGE_LOCATIONS + 1;
+	private static final int MAX_NUM_STORAGE_LOCATIONS = Stock.MAX_STORAGE_LOCATIONS;
 
 	private Stock sut;
 
@@ -42,12 +45,12 @@ public class TestStock {
 	 * Temperature
 	 */
 	@Test(expected = InvalidTemperatureException.class)
-	public void shouldThrowErrorOnABitTooCold() {
+	public void shouldThrowWhenJustBelowMin() {
 		this.sut.setTemperature(TestStock.JUST_BELOW_MIN);
 	}
 
 	@Test(expected = InvalidTemperatureException.class)
-	public void shouldThrowErrorOnABitTooWarm() {
+	public void shouldThrowWhenJustAboveMax() {
 		this.sut.setTemperature(TestStock.JUST_ABOVE_MAX);
 	}
 
@@ -66,15 +69,16 @@ public class TestStock {
 	}
 
 	@Test
-	public void shoudlGetMinTemperatureWhenNotSet() {
+	public void shouldGetMinTemperatureWhenNotSet() {
 		assertEquals(Double.MIN_VALUE, this.sut.getTemperature());
 	}
 
 	/*
 	 * Storage locations
 	 */
+
 	//
-	// Get storage locations
+	// Get
 	//
 	@Test
 	public void shouldReturnNoStorageLocations() {
@@ -86,9 +90,10 @@ public class TestStock {
 	// Note: Several storage locations may have the same names but not be the
 	// same object
 	@Test
-	public void shoudlReturnStorageLocationsByName() {
+	public void shouldReturnStorageLocationsByName() {
 		LinkedList<StorageLocation> inputs = this.createStorageLocations(
-				Stock.MAX_STORAGE_LOCATIONS - 1, TestStock.VALID_STORAGE_NAME);
+				TestStock.VALID_NUM_STORAGE_LOCATIONS,
+				TestStock.VALID_STORAGE_NAME);
 		StorageLocation input = this
 				.createStorageLocation(TestStock.VALID_STORAGE_NAME_2);
 		inputs.add(input);
@@ -99,13 +104,12 @@ public class TestStock {
 				.getStorageLocationsByName(TestStock.VALID_STORAGE_NAME);
 
 		verifyInvokeGetName(inputs);
-		assertEquals(inputs.subList(0, Stock.MAX_STORAGE_LOCATIONS - 1), output);
+		assertEquals(inputs.subList(0, TestStock.VALID_NUM_STORAGE_LOCATIONS),
+				output);
 	}
-
-	// TODO: Add test for get all storage locations
-
+	
 	//
-	// Adding one storage location
+	// Add one
 	//
 	@Test
 	public void shouldAddStorageLocation() {
@@ -133,9 +137,9 @@ public class TestStock {
 	}
 
 	@Test(expected = TooManyStorageLocationsException.class)
-	public void shouldThrowOnAddingTooManyStorageLocations() {
+	public void shouldThrowWhenAddingTooManyStorageLocations() {
 		LinkedList<StorageLocation> input = this.createStorageLocations(
-				Stock.MAX_STORAGE_LOCATIONS + 1, TestStock.VALID_STORAGE_NAME);
+				TestStock.TOO_MANY_STORAGE_LOCATIONS, TestStock.VALID_STORAGE_NAME);
 
 		this.addStorageLocationMultipleTimes(input);
 	}
@@ -146,7 +150,7 @@ public class TestStock {
 	}
 
 	//
-	// Adding many storage locations
+	// Add many
 	//
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowWhenAddingManyNullStorageLocation() {
@@ -156,7 +160,7 @@ public class TestStock {
 	@Test
 	public void shouldAddManyStorageLocations() {
 		LinkedList<StorageLocation> input = createStorageLocations(
-				Stock.MAX_STORAGE_LOCATIONS, TestStock.VALID_STORAGE_NAME);
+				TestStock.MAX_NUM_STORAGE_LOCATIONS, TestStock.VALID_STORAGE_NAME);
 
 		this.sut.addStorageLocations(input);
 
@@ -169,7 +173,7 @@ public class TestStock {
 	@Test(expected = TooManyStorageLocationsException.class)
 	public void shouldThrowWhenAddingTooManyStorageLocationsAtOnce() {
 		LinkedList<StorageLocation> input = createStorageLocations(
-				Stock.MAX_STORAGE_LOCATIONS + 1, TestStock.VALID_STORAGE_NAME);
+				TestStock.TOO_MANY_STORAGE_LOCATIONS, TestStock.VALID_STORAGE_NAME);
 
 		this.sut.addStorageLocations(input);
 	}
@@ -177,7 +181,7 @@ public class TestStock {
 	@Test(expected = TooManyStorageLocationsException.class)
 	public void shouldThrowWhenAddingTooManyStorageLocationsAlreadyExisting() {
 		LinkedList<StorageLocation> input = this.createStorageLocations(
-				Stock.MAX_STORAGE_LOCATIONS, TestStock.VALID_STORAGE_NAME);
+				TestStock.MAX_NUM_STORAGE_LOCATIONS, TestStock.VALID_STORAGE_NAME);
 
 		this.sut.addStorageLocations(input);
 
@@ -190,7 +194,7 @@ public class TestStock {
 	@Test
 	public void shouldIgnoreDuplicationsWhenAddingManyExisting() {
 		LinkedList<StorageLocation> firstInputs = this.createStorageLocations(
-				Stock.MAX_STORAGE_LOCATIONS, TestStock.VALID_STORAGE_NAME);
+				TestStock.MAX_NUM_STORAGE_LOCATIONS, TestStock.VALID_STORAGE_NAME);
 		LinkedList<StorageLocation> secondInputs = new LinkedList<StorageLocation>();
 		secondInputs.add(firstInputs.get(0));
 
@@ -206,7 +210,7 @@ public class TestStock {
 	@Test
 	public void shouldIgnoreAddingDuplicatesInInputListWhenAddingMany() {
 		LinkedList<StorageLocation> inputs = this.createStorageLocations(
-				Stock.MAX_STORAGE_LOCATIONS, TestStock.VALID_STORAGE_NAME);
+				TestStock.MAX_NUM_STORAGE_LOCATIONS, TestStock.VALID_STORAGE_NAME);
 		inputs.addAll(inputs);
 
 		this.sut.addStorageLocations(inputs);
@@ -215,12 +219,6 @@ public class TestStock {
 				.getStorageLocations();
 
 		assertEquals(inputs.subList(0, 3), outputs);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowWhenMergingUsingNullStorageLocations() {
-		this.sut.mergeStorageLocations(null, null);
-		;
 	}
 
 	@Test
@@ -284,7 +282,7 @@ public class TestStock {
 	}
 
 	/*
-	 * Move between storage locations
+	 * Move
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowWhenMovingUsingNullArticleNumber() {
@@ -344,7 +342,7 @@ public class TestStock {
 	}
 
 	/*
-	 * Search articles
+	 * Search
 	 */
 	@Test
 	public void shouldNotFindAnyArticlesWhenSearching() {
@@ -374,8 +372,14 @@ public class TestStock {
 		assertEquals(0, output.size());
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowWhenMergingUsingNullStorageLocations() {
+		this.sut.mergeStorageLocations(null, null);
+		;
+	}
+
 	/*
-	 * Merge storage locations
+	 * Merge
 	 */
 	@Test
 	public void shouldNotMergeWhenTooLargeWidth() {
@@ -446,7 +450,7 @@ public class TestStock {
 	}
 
 	/*
-	 * Delete storage locations
+	 * Delete
 	 */
 	@Test
 	public void shouldRemoveAllStorageLocations() {
@@ -454,7 +458,7 @@ public class TestStock {
 				TestStock.VALID_STORAGE_NAME);
 		this.sut.addStorageLocations(input);
 
-		this.sut.deleteAllStorageLocations();
+		this.sut.removeAllStorageLocations();
 
 		assertEquals(0, this.sut.getStorageLocations().size());
 	}
@@ -468,7 +472,7 @@ public class TestStock {
 		this.sut.addStorageLocations(input1);
 		this.sut.addStorageLocations(input2);
 
-		this.sut.deteleAllStorageLocations(TestStock.VALID_STORAGE_NAME);
+		this.sut.removeAllStorageLocations(TestStock.VALID_STORAGE_NAME);
 
 		assertEquals(1, this.sut.getStorageLocations().size());
 		assertEquals(
@@ -479,7 +483,7 @@ public class TestStock {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowWhenDeletingStorageLocationUsingNull() {
-		this.sut.deteleAllStorageLocations(null);
+		this.sut.removeAllStorageLocations(null);
 	}
 
 	/*
@@ -500,7 +504,7 @@ public class TestStock {
 	//
 
 	private void verifyInvokeGetName(LinkedList<StorageLocation> locs) {
-		for (int i = 0; i < Stock.MAX_STORAGE_LOCATIONS - 1; i++) {
+		for (int i = 0; i < TestStock.VALID_NUM_STORAGE_LOCATIONS; i++) {
 			verify(locs.get(i)).getName();
 		}
 	}
