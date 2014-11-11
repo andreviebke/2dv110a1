@@ -453,12 +453,12 @@ public class TestStock {
 	@Test
 	public void shouldRemoveAllStorageLocations()
 	{
-		LinkedList<StorageLocation> input = this.createStorageLocations(10, TestStock.VALID_STORAGE_NAME);
+		LinkedList<StorageLocation> input = this.createStorageLocations(3, TestStock.VALID_STORAGE_NAME);
 		this.sut.addStorageLocations(input);
 		
 		this.sut.deleteAllStorageLocations();
 		
-		assertEquals(0, this.sut.getStorageLocations());
+		assertEquals(0, this.sut.getStorageLocations().size());
 	}
 	
 	/*

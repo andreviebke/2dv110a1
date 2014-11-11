@@ -285,4 +285,11 @@ public class Stock {
 
 		return toReturn;
 	}
+
+	/**
+	 * Deletes all storage locations
+	 */
+	public void deleteAllStorageLocations() {
+		this.storageLocations.clear();
+	}
 }
