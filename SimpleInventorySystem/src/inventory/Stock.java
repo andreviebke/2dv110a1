@@ -220,6 +220,10 @@ public class Stock {
 	 * @return all found articles
 	 */
 	public LinkedList<Article> findArticles(String id) {
+		
+		if(null == id)
+			throw new IllegalArgumentException();
+		
 		LinkedList<Article> foundArticles = new LinkedList<Article>();
 
 		for (StorageLocation s : this.storageLocations)
