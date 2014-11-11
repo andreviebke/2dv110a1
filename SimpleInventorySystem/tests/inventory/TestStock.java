@@ -216,6 +216,12 @@ public class TestStock {
 
 		assertEquals(inputs.subList(0, 3), outputs);
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowExceptionOnNullStorageLocationsWhenMerging()
+	{
+		this.sut.mergeStorageLocations(null, null);;
+	}
 
 	/*
 	 * Move between storage locations
