@@ -216,11 +216,11 @@ public class TestStock {
 
 		assertEquals(inputs.subList(0, 3), outputs);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowWhenMergingUsingNullStorageLocations()
-	{
-		this.sut.mergeStorageLocations(null, null);;
+	public void shouldThrowWhenMergingUsingNullStorageLocations() {
+		this.sut.mergeStorageLocations(null, null);
+		;
 	}
 
 	@Test
@@ -279,16 +279,15 @@ public class TestStock {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowWhenMovingUsingNullStorageLocation() {
-		
+
 		this.sut.moveAllArticles(null, null);
 	}
-	
+
 	/*
 	 * Move between storage locations
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowWhenMovingUsingNullArticleNumber()
-	{
+	public void shouldThrowWhenMovingUsingNullArticleNumber() {
 		this.sut.moveAllArticles(null, null, null);
 	}
 
@@ -338,10 +337,9 @@ public class TestStock {
 		this.verifyInvokeArticleWidth(inputArticles1);
 		this.verifyInvokeArticleWidth(inputArticles2);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowWhenSearchingUsingNullArticleNumber()
-	{
+	public void shouldThrowWhenSearchingUsingNullArticleNumber() {
 		this.sut.findArticles(null);
 	}
 
@@ -375,7 +373,7 @@ public class TestStock {
 		this.verifyInvokeGetArticles(TestStock.VALID_ART_NR_2, input2);
 		assertEquals(0, output.size());
 	}
-	
+
 	/*
 	 * Merge storage locations
 	 */
@@ -446,21 +444,44 @@ public class TestStock {
 		this.verifyInvokeArticleWdith(inputArticles1, 1);
 		this.verifyInvokeArticleWdith(inputArticles2, 1);
 	}
-	
+
 	/*
 	 * Delete storage locations
 	 */
 	@Test
-	public void shouldRemoveAllStorageLocations()
-	{
-		LinkedList<StorageLocation> input = this.createStorageLocations(3, TestStock.VALID_STORAGE_NAME);
+	public void shouldRemoveAllStorageLocations() {
+		LinkedList<StorageLocation> input = this.createStorageLocations(3,
+				TestStock.VALID_STORAGE_NAME);
 		this.sut.addStorageLocations(input);
-		
+
 		this.sut.deleteAllStorageLocations();
-		
+
 		assertEquals(0, this.sut.getStorageLocations().size());
 	}
-	
+
+	@Test
+	public void shouldRemoveAllStorageLocationsWithName() {
+		LinkedList<StorageLocation> input1 = this.createStorageLocations(1,
+				TestStock.VALID_STORAGE_NAME);
+		LinkedList<StorageLocation> input2 = this.createStorageLocations(1,
+				TestStock.VALID_STORAGE_NAME_2);
+		this.sut.addStorageLocations(input1);
+		this.sut.addStorageLocations(input2);
+
+		this.sut.deteleAllStorageLocations(TestStock.VALID_STORAGE_NAME);
+
+		assertEquals(1, this.sut.getStorageLocations().size());
+		assertEquals(
+				0,
+				this.sut.getStorageLocationsByName(TestStock.VALID_STORAGE_NAME)
+						.size());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowWhenDeletingStorageLocationUsingNull() {
+		this.sut.deteleAllStorageLocations(null);
+	}
+
 	/*
 	 * Helper methods
 	 */
