@@ -90,7 +90,7 @@ public class TestStock {
 		LinkedList<StorageLocation> inputs = this.createStorageLocations(
 				Stock.MAX_STORAGE_LOCATIONS - 1, TestStock.VALID_STORAGE_NAME);
 		StorageLocation input = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME_2);
+				.createStorageLocation(TestStock.VALID_STORAGE_NAME_2);
 		inputs.add(input);
 
 		this.sut.addStorageLocations(inputs);
@@ -109,7 +109,7 @@ public class TestStock {
 	//
 	@Test
 	public void shouldAddStorageLocation() {
-		StorageLocation input = this.createStorageLocations(null);
+		StorageLocation input = this.createStorageLocation(null);
 
 		this.sut.addStorageLocation(input);
 
@@ -120,7 +120,7 @@ public class TestStock {
 
 	@Test
 	public void shouldNotAddDuplicatedStorageLocation() {
-		StorageLocation input = this.createStorageLocations(null);
+		StorageLocation input = this.createStorageLocation(null);
 
 		this.sut.addStorageLocation(input);
 		this.sut.addStorageLocation(input);
@@ -182,7 +182,7 @@ public class TestStock {
 		this.sut.addStorageLocations(input);
 
 		input = new LinkedList<StorageLocation>();
-		input.add(this.createStorageLocations(TestStock.VALID_STORAGE_NAME));
+		input.add(this.createStorageLocation(TestStock.VALID_STORAGE_NAME));
 
 		this.sut.addStorageLocations(input);
 	}
@@ -226,9 +226,9 @@ public class TestStock {
 	@Test
 	public void shouldMoveAllArticlesBetweenStorageLocations() {
 		StorageLocation input1 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
+				.createStorageLocation(TestStock.VALID_STORAGE_NAME);
 		StorageLocation input2 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME_2);
+				.createStorageLocation(TestStock.VALID_STORAGE_NAME_2);
 
 		LinkedList<Article> inputArticles1 = this.createArticleList(
 				TestStock.VALID_ART_NR_1, 0, 2);
@@ -252,9 +252,9 @@ public class TestStock {
 	@Test
 	public void shouldMoveAllMatchingArticlesBetweenStorageLocations() {
 		StorageLocation input1 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
+				.createStorageLocation(TestStock.VALID_STORAGE_NAME);
 		StorageLocation input2 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME_2);
+				.createStorageLocation(TestStock.VALID_STORAGE_NAME_2);
 
 		LinkedList<Article> inputArticles1 = this.createArticleList(
 				TestStock.VALID_ART_NR_1, 2);
@@ -295,9 +295,9 @@ public class TestStock {
 	@Test
 	public void shouldNotMoveWhenTooManyArticles() {
 		StorageLocation input1 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
+				.createStorageLocation(TestStock.VALID_STORAGE_NAME);
 		StorageLocation input2 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME_2);
+				.createStorageLocation(TestStock.VALID_STORAGE_NAME_2);
 
 		LinkedList<Article> inputArticles1 = this.createArticleList(
 				TestStock.VALID_ART_NR_2, StorageLocation.MAX_ARTICLES + 1);
@@ -319,9 +319,9 @@ public class TestStock {
 	@Test
 	public void shouldNotMoveWhenTooLargeWidth() {
 		StorageLocation input1 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
+				.createStorageLocation(TestStock.VALID_STORAGE_NAME);
 		StorageLocation input2 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME_2);
+				.createStorageLocation(TestStock.VALID_STORAGE_NAME_2);
 
 		LinkedList<Article> inputArticles1 = new LinkedList<Article>();
 		LinkedList<Article> inputArticles2 = this.createArticleList(
@@ -351,9 +351,9 @@ public class TestStock {
 	@Test
 	public void shouldNotFindAnyArticlesWhenSearching() {
 		StorageLocation input1 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
+				.createStorageLocation(TestStock.VALID_STORAGE_NAME);
 		StorageLocation input2 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME_2);
+				.createStorageLocation(TestStock.VALID_STORAGE_NAME_2);
 
 		LinkedList<Article> inputArticles1 = this.createArticleList(
 				TestStock.VALID_ART_NR_1, 3);
@@ -382,9 +382,9 @@ public class TestStock {
 	@Test
 	public void shouldNotMergeWhenTooLargeWidth() {
 		StorageLocation input1 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
+				.createStorageLocation(TestStock.VALID_STORAGE_NAME);
 		StorageLocation input2 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME_2);
+				.createStorageLocation(TestStock.VALID_STORAGE_NAME_2);
 
 		LinkedList<Article> inputArticles1 = this.createArticleList(
 				TestStock.VALID_ART_NR_1, StorageLocation.MAX_WIDTH / 2, 2);
@@ -404,9 +404,9 @@ public class TestStock {
 	@Test
 	public void shouldNotMergeWhenTooManyArticles() {
 		StorageLocation input1 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
+				.createStorageLocation(TestStock.VALID_STORAGE_NAME);
 		StorageLocation input2 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME_2);
+				.createStorageLocation(TestStock.VALID_STORAGE_NAME_2);
 
 		LinkedList<Article> inputArticles1 = this.createArticleList(
 				TestStock.VALID_ART_NR_2, StorageLocation.MAX_ARTICLES + 1);
@@ -425,9 +425,9 @@ public class TestStock {
 	@Test
 	public void shouldMerge() {
 		StorageLocation input1 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME);
+				.createStorageLocation(TestStock.VALID_STORAGE_NAME);
 		StorageLocation input2 = this
-				.createStorageLocations(TestStock.VALID_STORAGE_NAME_2);
+				.createStorageLocation(TestStock.VALID_STORAGE_NAME_2);
 
 		LinkedList<Article> inputArticles1 = this.createArticleList(
 				TestStock.VALID_ART_NR_2, StorageLocation.MAX_WIDTH / 4, 1);
@@ -445,6 +445,20 @@ public class TestStock {
 		verify(input1).insertMany(inputArticles2);
 		this.verifyInvokeArticleWdith(inputArticles1, 1);
 		this.verifyInvokeArticleWdith(inputArticles2, 1);
+	}
+	
+	/*
+	 * Delete storage locations
+	 */
+	@Test
+	public void shouldRemoveAllStorageLocations()
+	{
+		LinkedList<StorageLocation> input = this.createStorageLocations(10, TestStock.VALID_STORAGE_NAME);
+		this.sut.addStorageLocations(input);
+		
+		this.sut.deleteAllStorageLocations();
+		
+		assertEquals(0, this.sut.getStorageLocations());
 	}
 	
 	/*
@@ -550,7 +564,7 @@ public class TestStock {
 		return mock;
 	}
 
-	private StorageLocation createStorageLocations(String name) {
+	private StorageLocation createStorageLocation(String name) {
 		StorageLocation mock = mock(StorageLocation.class);
 		if (null != name)
 			when(mock.getName()).thenReturn(name);
