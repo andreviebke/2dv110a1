@@ -1,4 +1,4 @@
-package inventory;
+package inventory.exceptions;
 
 public class TooManyStorageLocationsException extends RuntimeException{
 

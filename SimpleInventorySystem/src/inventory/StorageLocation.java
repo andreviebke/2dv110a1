@@ -1,5 +1,8 @@
 package inventory;
 
+import inventory.exceptions.InvalidWidthException;
+import inventory.exceptions.TooManyArticlesException;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -176,7 +179,7 @@ public class StorageLocation {
 			totWidth += a.getWidth();
 
 		if (totWidth > StorageLocation.MAX_WIDTH)
-			throw new IllegalArgumentException();
+			throw new InvalidWidthException();
 	}
 
 	/**
@@ -205,6 +208,6 @@ public class StorageLocation {
 	 */
 	private void checkNumArticles(List<Article> articles) {
 		if (articles.size() > StorageLocation.MAX_ARTICLES)
-			throw new IllegalArgumentException();
+			throw new TooManyArticlesException();
 	}
 }
