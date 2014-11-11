@@ -2,10 +2,12 @@ package inventory;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import inventory.exceptions.InvalidWidthException;
+import inventory.exceptions.TooManyArticlesException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -59,7 +61,7 @@ public class TestStorageLocation {
 		assertEquals(articles, this.sut.getArticles());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = TooManyArticlesException.class)
 	public void shouldThrowOnTooManyArticles() {
 		LinkedList<Article> articles = this.generateArticles(
 				StorageLocation.MAX_ARTICLES + 1, 0.0);
@@ -67,7 +69,7 @@ public class TestStorageLocation {
 		this.createSUTWithValidStorageName(articles);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = InvalidWidthException.class)
 	public void shouldThrowOnTooLargeWidth() {
 		LinkedList<Article> articles = this.generateArticles(1,
 				TestStorageLocation.TOO_LARGE_WIDTH);
@@ -125,7 +127,7 @@ public class TestStorageLocation {
 		this.sut.insert(null);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = InvalidWidthException.class)
 	public void shouldThrowWhenInsertingOneArticleWithTooLargeWidth() {
 		Article mock = this.createMockArticle(
 				TestStorageLocation.TOO_LARGE_WIDTH,
@@ -136,7 +138,7 @@ public class TestStorageLocation {
 		verify(mock).getWidth();
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = TooManyArticlesException.class)
 	public void shouldThrowWhenInsertingTooManyArticlesInSequence() {
 		for (int i = 0; i < StorageLocation.MAX_ARTICLES + 1; i++) {
 			Article mock = this.createMockArticle(
@@ -149,7 +151,7 @@ public class TestStorageLocation {
 		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = InvalidWidthException.class)
 	public void shouldThrowWhenAddingTooLargeWidthToAlreadyExistingArticles() {
 		Article mock1 = this.createMockArticle(
 				TestStorageLocation.TOO_LARGE_WIDTH / 2,
@@ -193,7 +195,7 @@ public class TestStorageLocation {
 		assertEquals(input1.size() + input2.size(), output.size());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = InvalidWidthException.class)
 	public void shouldThrowOnInsertManyArticlesWithTooLargeTotalWidth() {
 		LinkedList<Article> input = this.generateArticles(5,				
 				TestStorageLocation.TOO_LARGE_WIDTH / 5);		
@@ -203,7 +205,7 @@ public class TestStorageLocation {
 		this.verifyInvokeGetWidth(input);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = TooManyArticlesException.class)
 	public void shouldThrowOnInsertTooManyArticlesAtOnce() {
 		LinkedList<Article> input = this.generateArticles(
 				StorageLocation.MAX_ARTICLES + 1,
@@ -214,7 +216,7 @@ public class TestStorageLocation {
 		this.verifyInvokeNeverArticles(input);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = TooManyArticlesException.class)
 	public void shouldThrowOnInsertTooManyArticlesWhenExisting() {
 		LinkedList<Article> input = this.insert5Articles();
 		input.addAll(this.generateArticles(StorageLocation.MAX_ARTICLES
@@ -225,7 +227,7 @@ public class TestStorageLocation {
 		this.verifyInvokeNeverArticles(input);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = InvalidWidthException.class)
 	public void shouldThrowOnInsertManyArticlesWhenTooLargeWidthWithExisting() {
 		this.insert5Articles();
 
