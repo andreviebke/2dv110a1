@@ -5,28 +5,28 @@ public class Article {
 	public static int MAX_ARTNR_LENGTH = 20;
 	public static double MIN_WIDTH = 0;
 	public static double MAX_WIDTH = 999;
-	
+
 	private String artnr;
 	private double width;
-	
+
 	public Article() {
 		this.artnr = "";
 	}
 
 	public Article(String artnr, double width) {
-		
-		if(null == artnr)
+
+		if (null == artnr)
 			throw new IllegalArgumentException();
-		
-		if(artnr.length() > Article.MAX_ARTNR_LENGTH)
+
+		if (artnr.length() > Article.MAX_ARTNR_LENGTH)
 			throw new IllegalArgumentException();
-		
-		if(width < Article.MIN_WIDTH)
+
+		if (width < Article.MIN_WIDTH)
 			throw new IllegalArgumentException();
-		
-		if(width > Article.MAX_WIDTH)
+
+		if (width > Article.MAX_WIDTH)
 			throw new IllegalArgumentException();
-		
+
 		this.artnr = artnr;
 		this.width = width;
 	}
@@ -37,6 +37,23 @@ public class Article {
 
 	public double getWidth() {
 		return this.width;
+	}
+
+	public void setWidth(double width) {
+		if (width > Article.MAX_WIDTH)
+			throw new InvalidWidthException();
+
+		this.width = width;
+	}
+
+	public void setArtNr(String artNr) {
+		if (null == artNr)
+			throw new InvalidNameException();
+
+		if (artNr.length() > Article.MAX_ARTNR_LENGTH)
+			throw new InvalidNameException();
+
+		this.artnr = artNr;
 	}
 
 }
