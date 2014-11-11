@@ -420,7 +420,7 @@ public class TestStock {
 
 		LinkedList<Article> eBeforeArticlesS1 = this.createArticleList(
 				TestStock.VALID_ART_NR_2, StorageLocation.MAX_ARTICLES + 1);
-		;
+		
 		LinkedList<Article> eAfterArticlesS1 = new LinkedList<Article>();
 		LinkedList<Article> eBeforeArticlesS2 = new LinkedList<Article>();
 		LinkedList<Article> eAfterArticlesS2 = this.createArticleList(
@@ -443,7 +443,42 @@ public class TestStock {
 		assertEquals(eAfterArticlesS1.size(), afterArticlesInS1.size());
 		assertEquals(eAfterArticlesS2.size(), afterArticlesInS2.size());
 	}
+	
+	@Test
+	public void shouldNotMoveArticlesWithArticleIdWhenTooManyArticles() {
+		StorageLocation s1 = this
+				.generateStorageLocation(TestStock.VALID_STORAGE_NAME);
+		StorageLocation s2 = this
+				.generateStorageLocation(TestStock.VALID_STORAGE_NAME_2);
 
+		LinkedList<Article> eBeforeArticlesS1 = this.createArticleList(
+				TestStock.VALID_ART_NR_2, StorageLocation.MAX_ARTICLES + 1);
+		
+		LinkedList<Article> eAfterArticlesS1 = new LinkedList<Article>();
+		LinkedList<Article> eBeforeArticlesS2 = new LinkedList<Article>();
+		LinkedList<Article> eAfterArticlesS2 = this.createArticleList(
+				TestStock.VALID_ART_NR_2, StorageLocation.MAX_ARTICLES + 1);
+
+		when(s1.getArticles()).thenReturn(eBeforeArticlesS1).thenReturn(
+				eAfterArticlesS1);
+		when(s2.getArticles()).thenReturn(eBeforeArticlesS2).thenReturn(
+				eAfterArticlesS2);
+
+		this.sut.moveAllArticles(s1, s2, TestStock.VALID_ART_NR_2);
+
+		this.verifyGetArticles(TestStock.VALID_ART_NR_2, s2);
+		this.verifyGetArticles(s1);
+		this.verifyArticlesGetWidth(eBeforeArticlesS1);
+		this.verifyArticlesGetWidth(eBeforeArticlesS2);
+
+		LinkedList<Article> afterArticlesInS1 = (LinkedList<Article>) s1
+				.getArticles();
+		LinkedList<Article> afterArticlesInS2 = (LinkedList<Article>) s2
+				.getArticles();
+
+		assertEquals(eAfterArticlesS1.size(), afterArticlesInS1.size());
+		assertEquals(eAfterArticlesS2.size(), afterArticlesInS2.size());
+	}
 	/*
 	 * Helper methods
 	 */
