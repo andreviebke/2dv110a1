@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
+import static org.mockito.Matchers.*;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -265,7 +266,8 @@ public class TestStock {
 
 		this.sut.moveAllArticles(s1, s2, TestStock.VALID_ART_NR_1);
 
-		this.verifyGetArticles(s1);
+		this.verifyGetArticles(s1, s1);
+		this.verifyGetArticles(TestStock.VALID_ART_NR_1, s2);
 		verify(s2).pickAll(TestStock.VALID_ART_NR_1);
 
 		LinkedList<Article> afterArticlesInS1 = (LinkedList<Article>) s1
@@ -420,7 +422,7 @@ public class TestStock {
 
 		LinkedList<Article> eBeforeArticlesS1 = this.createArticleList(
 				TestStock.VALID_ART_NR_2, StorageLocation.MAX_ARTICLES + 1);
-		
+
 		LinkedList<Article> eAfterArticlesS1 = new LinkedList<Article>();
 		LinkedList<Article> eBeforeArticlesS2 = new LinkedList<Article>();
 		LinkedList<Article> eAfterArticlesS2 = this.createArticleList(
@@ -443,7 +445,7 @@ public class TestStock {
 		assertEquals(eAfterArticlesS1.size(), afterArticlesInS1.size());
 		assertEquals(eAfterArticlesS2.size(), afterArticlesInS2.size());
 	}
-	
+
 	@Test
 	public void shouldNotMoveArticlesWithArticleIdWhenTooManyArticles() {
 		StorageLocation s1 = this
@@ -461,15 +463,13 @@ public class TestStock {
 
 		when(s1.getArticles()).thenReturn(eBeforeArticlesS1).thenReturn(
 				eAfterArticlesS1);
-		when(s2.getArticles()).thenReturn(eBeforeArticlesS2).thenReturn(
-				eAfterArticlesS2);
+		when(s2.getArticles(anyString())).thenReturn(eBeforeArticlesS2);
+		when(s2.getArticles()).thenReturn(eAfterArticlesS2);
 
 		this.sut.moveAllArticles(s1, s2, TestStock.VALID_ART_NR_2);
 
 		this.verifyGetArticles(TestStock.VALID_ART_NR_2, s2);
 		this.verifyGetArticles(s1);
-		this.verifyArticlesGetWidth(eBeforeArticlesS1);
-		this.verifyArticlesGetWidth(eBeforeArticlesS2);
 
 		LinkedList<Article> afterArticlesInS1 = (LinkedList<Article>) s1
 				.getArticles();
@@ -479,6 +479,7 @@ public class TestStock {
 		assertEquals(eAfterArticlesS1.size(), afterArticlesInS1.size());
 		assertEquals(eAfterArticlesS2.size(), afterArticlesInS2.size());
 	}
+
 	/*
 	 * Helper methods
 	 */

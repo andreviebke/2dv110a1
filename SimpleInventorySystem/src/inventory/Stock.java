@@ -77,8 +77,9 @@ public class Stock {
 
 		LinkedList<StorageLocation> noInternalDuplicates = this
 				.removeInternalDuplications(locs);
-		LinkedList<StorageLocation> nonExternalDuplicates = this.removeExternalDuplications(
-				noInternalDuplicates, this.storageLocations);
+		LinkedList<StorageLocation> nonExternalDuplicates = this
+				.removeExternalDuplications(noInternalDuplicates,
+						this.storageLocations);
 
 		this.checkStorageCount(nonExternalDuplicates.size());
 
@@ -153,89 +154,100 @@ public class Stock {
 
 	/**
 	 * Get storage location by name
-	 * @param storage name
+	 * 
+	 * @param storage
+	 *            name
 	 * @return all storage locations with name
 	 */
 	public LinkedList<StorageLocation> getStorageLocationsByName(
 			String storageName) {
-		
+
 		LinkedList<StorageLocation> toReturn = new LinkedList<StorageLocation>();
-		
-		for(StorageLocation loc : this.storageLocations)
-		{
+
+		for (StorageLocation loc : this.storageLocations) {
 			String name = loc.getName();
-			if(name.equalsIgnoreCase(storageName))
-			{
+			if (name.equalsIgnoreCase(storageName)) {
 				toReturn.add(loc);
 			}
 		}
-		
+
 		return toReturn;
 	}
 
 	public void moveAllArticles(StorageLocation s1, StorageLocation s2) {
 		LinkedList<Article> s1Articles = (LinkedList<Article>) s1.getArticles();
 		LinkedList<Article> s2Articles = (LinkedList<Article>) s2.getArticles();
-		
-		double totWidth = 0;		
-		for(Article a : s1Articles)
-		{
+
+		double totWidth = 0;
+		for (Article a : s1Articles) {
 			totWidth += a.getWidth();
 		}
-		for(Article a : s2Articles)
-		{
+		for (Article a : s2Articles) {
 			totWidth += a.getWidth();
 		}
-		
-		double totArticles = s1Articles.size() + s2Articles.size();		
-		if(totWidth <= StorageLocation.MAX_WIDTH && totArticles <= StorageLocation.MAX_ARTICLES)
-		{
+
+		double totArticles = s1Articles.size() + s2Articles.size();
+		if (totWidth <= StorageLocation.MAX_WIDTH
+				&& totArticles <= StorageLocation.MAX_ARTICLES) {
 			s1.getArticles().addAll(s2.pickAll());
 		}
 	}
 
 	public void moveAllArticles(StorageLocation s1, StorageLocation s2,
 			String validArtNr1) {
-		s1.getArticles().addAll(s2.pickAll(validArtNr1));
-		
+		LinkedList<Article> s1Articles = (LinkedList<Article>) s1.getArticles();
+		LinkedList<Article> s2Articles = (LinkedList<Article>) s2
+				.getArticles(validArtNr1);
+
+		double totWidth = 0;
+		for (Article a : s1Articles) {
+			totWidth += a.getWidth();
+		}
+		for (Article a : s2Articles) {
+			totWidth += a.getWidth();
+		}
+
+		double totArticles = s1Articles.size() + s2Articles.size();
+		if (totWidth <= StorageLocation.MAX_WIDTH
+				&& totArticles <= StorageLocation.MAX_ARTICLES) {
+			s1.getArticles().addAll(s2.pickAll(validArtNr1));
+		}
+
 	}
 
 	public LinkedList<Article> findArticles(String validArtNr2) {
 		LinkedList<Article> foundArticles = new LinkedList<Article>();
-		
-		for(StorageLocation s : this.storageLocations)
-		{
+
+		for (StorageLocation s : this.storageLocations) {
 			foundArticles.addAll(s.getArticles(validArtNr2));
 		}
-		
+
 		return foundArticles;
 	}
 
 	public void mergeStorageLocations(StorageLocation s1, StorageLocation s2) {
 		double totWidth = 0;
 		double totArticles = 0;
-		
-		for(Article art : s1.getArticles())
-		{
+
+		for (Article art : s1.getArticles()) {
 			totWidth += art.getWidth();
-			totArticles ++;
-		}	
-		
-		for(Article art : s2.getArticles())
-		{
-			totWidth += art.getWidth();
-			totArticles ++;
+			totArticles++;
 		}
 
-		if(totWidth > StorageLocation.MAX_WIDTH)
+		for (Article art : s2.getArticles()) {
+			totWidth += art.getWidth();
+			totArticles++;
+		}
+
+		if (totWidth > StorageLocation.MAX_WIDTH)
 			return;
-		
-		if(totArticles > StorageLocation.MAX_ARTICLES)
+
+		if (totArticles > StorageLocation.MAX_ARTICLES)
 			return;
-		
+
 		this.moveAllArticles(s1, s2);
 		this.storageLocations.remove(s2);
-		
+
 	}
 
 }
