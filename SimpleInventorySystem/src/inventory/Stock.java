@@ -118,7 +118,7 @@ public class Stock {
 	 *            - from location
 	 */
 	public boolean moveAllArticles(StorageLocation s1, StorageLocation s2) {
-		
+
 		return this.moveAllArticles(s1, s2, null);
 	}
 
@@ -140,14 +140,14 @@ public class Stock {
 
 		LinkedList<Article> allArticles = new LinkedList<Article>();
 		allArticles.addAll(s1.getArticles());
-		allArticles.addAll(artNr == null ? s2.getArticles() : s2.getArticles(artNr));
+		allArticles.addAll(artNr == null ? s2.getArticles() : s2
+				.getArticles(artNr));
 
-		if (this.checkCount(allArticles) && this.checkWidth(allArticles))
-		{
+		if (this.checkCount(allArticles) && this.checkWidth(allArticles)) {
 			s1.insertMany(artNr == null ? s2.pickAll() : s2.pickAll(artNr));
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -291,5 +291,14 @@ public class Stock {
 	 */
 	public void deleteAllStorageLocations() {
 		this.storageLocations.clear();
+	}
+
+	public void deteleAllStorageLocations(String validStorageName) {
+		if (null == validStorageName)
+			throw new IllegalArgumentException();
+
+		this.storageLocations.removeAll(this
+				.getStorageLocationsByName(validStorageName));
+
 	}
 }
