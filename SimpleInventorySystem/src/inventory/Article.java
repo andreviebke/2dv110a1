@@ -1,5 +1,8 @@
 package inventory;
 
+import inventory.exceptions.InvalidNameException;
+import inventory.exceptions.InvalidWidthException;
+
 public class Article {
 
 	public static int MAX_ARTNR_LENGTH = 20;
@@ -9,10 +12,18 @@ public class Article {
 	private String artnr;
 	private double width;
 
+	/**
+	 * Constructor
+	 */
 	public Article() {
 		this.artnr = "";
 	}
 
+	/**
+	 * Constructor
+	 * @param artnr - article number
+	 * @param width - width
+	 */
 	public Article(String artnr, double width) {
 
 		if (null == artnr)
@@ -31,14 +42,26 @@ public class Article {
 		this.width = width;
 	}
 
+	/**
+	 * Returns article number
+	 * @return article number
+	 */
 	public String getArtNr() {
 		return this.artnr;
 	}
 
+	/**
+	 * Returns width
+	 * @return width
+	 */
 	public double getWidth() {
 		return this.width;
 	}
 
+	/**
+	 * Sets width
+	 * @param width to set
+	 */
 	public void setWidth(double width) {
 		if (width > Article.MAX_WIDTH)
 			throw new InvalidWidthException();
@@ -46,6 +69,10 @@ public class Article {
 		this.width = width;
 	}
 
+	/**
+	 * Sets article number
+	 * @param artNr - article number to set
+	 */
 	public void setArtNr(String artNr) {
 		if (null == artNr)
 			throw new InvalidNameException();

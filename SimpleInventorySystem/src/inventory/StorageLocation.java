@@ -6,7 +6,6 @@ import java.util.List;
 public class StorageLocation {
 
 	public static double MAX_WIDTH = 999;
-	public static double MIN_WIDTH = 0;
 	public static int MAX_ARTICLES = 10;
 
 	private String name;
@@ -35,10 +34,9 @@ public class StorageLocation {
 	 * @param articles
 	 */
 	public StorageLocation(String name, List<Article> articles) {
-
-		checkNumArticles(articles);
+		this.checkNumArticles(articles);
+		this.checkWidth((LinkedList<Article>) articles);
 		this.articles = articles;
-		this.checkWidth((LinkedList<Article>) this.articles);
 	}
 
 	/**
@@ -71,7 +69,7 @@ public class StorageLocation {
 		if (null == string)
 			throw new IllegalArgumentException();
 
-		LinkedList<Article> tmpList = getArticlesWithId(string);	
+		LinkedList<Article> tmpList = findArticlesWithId(string);
 
 		return tmpList;
 	}
@@ -88,7 +86,7 @@ public class StorageLocation {
 
 		LinkedList<Article> articles = new LinkedList<Article>(this.articles);
 		articles.add(article);
-		
+
 		this.checkWidth(articles);
 		this.checkNumArticles(articles);
 
@@ -107,7 +105,7 @@ public class StorageLocation {
 
 		LinkedList<Article> allArticles = new LinkedList<Article>(articles);
 		allArticles.addAll(this.articles);
-		
+
 		this.checkWidth(allArticles);
 		this.checkNumArticles(allArticles);
 
@@ -126,7 +124,7 @@ public class StorageLocation {
 		if (null == string)
 			throw new IllegalArgumentException();
 
-		LinkedList<Article> tmpList = getArticlesWithId(string);		
+		LinkedList<Article> tmpList = findArticlesWithId(string);
 
 		for (Article tmpArticle : tmpList)
 			this.articles.remove(tmpArticle);
@@ -146,6 +144,27 @@ public class StorageLocation {
 	}
 
 	/**
+	 * Picks a count articles with number
+	 * 
+	 * @param string
+	 *            - article number
+	 * @param count
+	 *            - number to pick
+	 * @return picked articles
+	 */
+	public LinkedList<Article> pick(String string, int count) {
+		LinkedList<Article> allArticles = this.getArticles(string);
+		LinkedList<Article> pickedArticles = new LinkedList<Article>();
+
+		for (int i = 0; i < count && i < allArticles.size(); i++)
+			pickedArticles.add(allArticles.get(i));
+		
+		this.articles.removeAll(pickedArticles);
+
+		return pickedArticles;
+	}
+
+	/**
 	 * Checks the the total width of a set of articles
 	 * 
 	 * @param articles
@@ -158,9 +177,6 @@ public class StorageLocation {
 
 		if (totWidth > StorageLocation.MAX_WIDTH)
 			throw new IllegalArgumentException();
-
-		if (totWidth < StorageLocation.MIN_WIDTH)
-			throw new IllegalArgumentException();
 	}
 
 	/**
@@ -171,13 +187,13 @@ public class StorageLocation {
 	 * @param tmpList
 	 *            - list
 	 */
-	private LinkedList<Article> getArticlesWithId(String string) {
+	private LinkedList<Article> findArticlesWithId(String string) {
 		LinkedList<Article> articles = new LinkedList<Article>();
-		
+
 		for (Article a : this.articles)
 			if (a.getArtNr().equalsIgnoreCase(string))
 				articles.add(a);
-		
+
 		return articles;
 	}
 
@@ -190,15 +206,5 @@ public class StorageLocation {
 	private void checkNumArticles(List<Article> articles) {
 		if (articles.size() > StorageLocation.MAX_ARTICLES)
 			throw new IllegalArgumentException();
-	}
-
-	public LinkedList<Article> pick(String string, int count) {
-		LinkedList<Article> allArticles = this.getArticles(string);
-		LinkedList<Article> pickedArticles = new LinkedList<Article>();
-		
-		for(int i=0; i<count && i<allArticles.size(); i++)
-			pickedArticles.add(allArticles.get(i));
-			
-		return pickedArticles;
 	}
 }

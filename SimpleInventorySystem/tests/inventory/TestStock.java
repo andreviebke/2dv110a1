@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
 import static org.mockito.Matchers.*;
+import inventory.exceptions.TooManyStorageLocationsException;
 
 import java.util.HashMap;
 import java.util.LinkedList;

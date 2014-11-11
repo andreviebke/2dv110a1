@@ -1,20 +1,31 @@
 package inventory;
 
 import static org.junit.Assert.assertEquals;
+import inventory.exceptions.InvalidNameException;
+import inventory.exceptions.InvalidWidthException;
 
-import org.junit.Test;
+import org.junit.*;
 
 public class TestArticle {
 
 	/* Test data */
-	private static String VALID_ART_NR = "12345";
-	private static String TOO_LONG_ART_NR = "123456789012345678901";
-	private static String NO_ART_NR = "";
+	private static final String VALID_ART_NR = "12345";
+	private static final String TOO_LONG_ART_NR = "123456789012345678901";
+	private static final String EMPTY_ART_NR = "";
+	private static final double VALID_WIDTH = 123.0;
+	private static final double TOO_SMALL_WIDTH = -1;
+	private static final double TOO_LARGE_WIDTH = 1000;
 
-	private static double VALID_WIDTH = 123.0;
-	private static double TOO_SMALL_WIDTH = -1;
-	private static double TOO_LARGE_WIDTH = 1000;
+	private Article sut;
 
+	@Before
+	public void setUp() {
+		this.sut = new Article();
+	}
+
+	/*
+	 * Creation of article
+	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowOnNullArticleNumber() {
 		new Article(null, TestArticle.VALID_WIDTH);
@@ -45,37 +56,35 @@ public class TestArticle {
 
 	@Test
 	public void shouldSetEmptyString() {
-		Article art = new Article();
-		assertEquals(art.getArtNr(), TestArticle.NO_ART_NR);
+		assertEquals(this.sut.getArtNr(), TestArticle.EMPTY_ART_NR);
 	}
+
+	/*
+	 * Getters and setters
+	 */
 
 	@Test
 	public void shouldSetArtNr() {
-		Article art = new Article();
-		art.setArtNr(TestArticle.VALID_ART_NR);
+		this.sut.setArtNr(TestArticle.VALID_ART_NR);
 	}
 
 	@Test
 	public void shouldSetWidth() {
-		Article art = new Article();
-		art.setWidth(TestArticle.VALID_WIDTH);
+		this.sut.setWidth(TestArticle.VALID_WIDTH);
 	}
 
 	@Test(expected = InvalidWidthException.class)
 	public void shoudlThrowOnTooLargeWidth() {
-		Article art = new Article();
-		art.setWidth(TestArticle.TOO_LARGE_WIDTH);
+		this.sut.setWidth(TestArticle.TOO_LARGE_WIDTH);
 	}
 
 	@Test(expected = InvalidNameException.class)
 	public void shouldThrowOnTooLongArtNr() {
-		Article art = new Article();
-		art.setArtNr(TestArticle.TOO_LONG_ART_NR);
+		this.sut.setArtNr(TestArticle.TOO_LONG_ART_NR);
 	}
 
 	@Test(expected = InvalidNameException.class)
 	public void shouldThrowOnNullArtNr() {
-		Article art = new Article();
-		art.setArtNr(null);
+		this.sut.setArtNr(null);
 	}
 }

@@ -1,5 +1,7 @@
 package inventory;
 
+import inventory.exceptions.TooManyStorageLocationsException;
+
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
