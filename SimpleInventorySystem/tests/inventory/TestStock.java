@@ -286,9 +286,18 @@ public class TestStock {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowWhenMovingUsingNullArticleNumber() {
-		this.sut.moveAllArticles(null, null, null);
+		this.sut.moveAllArticles(mock(StorageLocation.class), mock(StorageLocation.class), null);
 	}
-
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowWhenMovingUsingNullStorageLocationOne() {
+		this.sut.moveAllArticles(mock(StorageLocation.class), null, null);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowWhenMovingUsingNullStorageLocationTwo() {
+		this.sut.moveAllArticles(null, mock(StorageLocation.class), null);
+	}
 	@Test
 	public void shouldNotMoveWhenTooManyArticles() {
 		StorageLocation input1 = this
@@ -372,12 +381,6 @@ public class TestStock {
 		assertEquals(0, output.size());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowWhenMergingUsingNullStorageLocations() {
-		this.sut.mergeStorageLocations(null, null);
-		;
-	}
-
 	/*
 	 * Merge
 	 */
@@ -449,6 +452,21 @@ public class TestStock {
 		this.verifyInvokeArticleWdith(inputArticles2, 1);
 	}
 
+
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowWhenMergingUsingNullStorageLocationOne() {
+		this.sut.mergeStorageLocations(null, mock(StorageLocation.class));
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowWhenMergingUsingNullStorageLocationTwo() {
+		this.sut.mergeStorageLocations(mock(StorageLocation.class), null);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowWhenMergingUsingNullStorageLocations() {
+		this.sut.mergeStorageLocations(null, null);
+	}
 	/*
 	 * Delete
 	 */
