@@ -107,7 +107,7 @@ public class TestStock {
 		assertEquals(inputs.subList(0, TestStock.VALID_NUM_STORAGE_LOCATIONS),
 				output);
 	}
-	
+
 	//
 	// Add one
 	//
@@ -139,7 +139,8 @@ public class TestStock {
 	@Test(expected = TooManyStorageLocationsException.class)
 	public void shouldThrowWhenAddingTooManyStorageLocations() {
 		LinkedList<StorageLocation> input = this.createStorageLocations(
-				TestStock.TOO_MANY_STORAGE_LOCATIONS, TestStock.VALID_STORAGE_NAME);
+				TestStock.TOO_MANY_STORAGE_LOCATIONS,
+				TestStock.VALID_STORAGE_NAME);
 
 		this.addStorageLocationMultipleTimes(input);
 	}
@@ -160,7 +161,8 @@ public class TestStock {
 	@Test
 	public void shouldAddManyStorageLocations() {
 		LinkedList<StorageLocation> input = createStorageLocations(
-				TestStock.MAX_NUM_STORAGE_LOCATIONS, TestStock.VALID_STORAGE_NAME);
+				TestStock.MAX_NUM_STORAGE_LOCATIONS,
+				TestStock.VALID_STORAGE_NAME);
 
 		this.sut.addStorageLocations(input);
 
@@ -173,7 +175,8 @@ public class TestStock {
 	@Test(expected = TooManyStorageLocationsException.class)
 	public void shouldThrowWhenAddingTooManyStorageLocationsAtOnce() {
 		LinkedList<StorageLocation> input = createStorageLocations(
-				TestStock.TOO_MANY_STORAGE_LOCATIONS, TestStock.VALID_STORAGE_NAME);
+				TestStock.TOO_MANY_STORAGE_LOCATIONS,
+				TestStock.VALID_STORAGE_NAME);
 
 		this.sut.addStorageLocations(input);
 	}
@@ -181,7 +184,8 @@ public class TestStock {
 	@Test(expected = TooManyStorageLocationsException.class)
 	public void shouldThrowWhenAddingTooManyStorageLocationsAlreadyExisting() {
 		LinkedList<StorageLocation> input = this.createStorageLocations(
-				TestStock.MAX_NUM_STORAGE_LOCATIONS, TestStock.VALID_STORAGE_NAME);
+				TestStock.MAX_NUM_STORAGE_LOCATIONS,
+				TestStock.VALID_STORAGE_NAME);
 
 		this.sut.addStorageLocations(input);
 
@@ -194,7 +198,8 @@ public class TestStock {
 	@Test
 	public void shouldIgnoreDuplicationsWhenAddingManyExisting() {
 		LinkedList<StorageLocation> firstInputs = this.createStorageLocations(
-				TestStock.MAX_NUM_STORAGE_LOCATIONS, TestStock.VALID_STORAGE_NAME);
+				TestStock.MAX_NUM_STORAGE_LOCATIONS,
+				TestStock.VALID_STORAGE_NAME);
 		LinkedList<StorageLocation> secondInputs = new LinkedList<StorageLocation>();
 		secondInputs.add(firstInputs.get(0));
 
@@ -210,7 +215,8 @@ public class TestStock {
 	@Test
 	public void shouldIgnoreAddingDuplicatesInInputListWhenAddingMany() {
 		LinkedList<StorageLocation> inputs = this.createStorageLocations(
-				TestStock.MAX_NUM_STORAGE_LOCATIONS, TestStock.VALID_STORAGE_NAME);
+				TestStock.MAX_NUM_STORAGE_LOCATIONS,
+				TestStock.VALID_STORAGE_NAME);
 		inputs.addAll(inputs);
 
 		this.sut.addStorageLocations(inputs);
@@ -285,19 +291,15 @@ public class TestStock {
 	 * Move
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowWhenMovingUsingNullArticleNumber() {
-		this.sut.moveAllArticles(mock(StorageLocation.class), mock(StorageLocation.class), null);
-	}
-	
-	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowWhenMovingUsingNullStorageLocationOne() {
 		this.sut.moveAllArticles(mock(StorageLocation.class), null, null);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowWhenMovingUsingNullStorageLocationTwo() {
 		this.sut.moveAllArticles(null, mock(StorageLocation.class), null);
 	}
+
 	@Test
 	public void shouldNotMoveWhenTooManyArticles() {
 		StorageLocation input1 = this
@@ -452,21 +454,21 @@ public class TestStock {
 		this.verifyInvokeArticleWdith(inputArticles2, 1);
 	}
 
-
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowWhenMergingUsingNullStorageLocationOne() {
 		this.sut.mergeStorageLocations(null, mock(StorageLocation.class));
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowWhenMergingUsingNullStorageLocationTwo() {
 		this.sut.mergeStorageLocations(mock(StorageLocation.class), null);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowWhenMergingUsingNullStorageLocations() {
 		this.sut.mergeStorageLocations(null, null);
 	}
+
 	/*
 	 * Delete
 	 */
